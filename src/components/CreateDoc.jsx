@@ -182,7 +182,7 @@ export default function CreateDoc() {
           <Button onClick={renameDocument} variant="contained" color="primary" sx={{ mb: 1 }}>
             Rename
           </Button>
-          <Button onClick={deleteDocument} variant="contained" sx={{backgroundColor: "red"}} className='bg-red-500'>
+          <Button onClick={deleteDocument} variant="contained" sx={{backgroundColor: "red"}}>
             Delete
           </Button>
         </Box>
