@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom toolbar option styles */
+.custom-toolbar .rdw-option-wrapper {
+  color: #000;
+  background-color: #E8F0FE !important;
+}
+
+/* Styling for dropdown menus */
+.custom-toolbar .rdw-fontsize-wrapper,
+.custom-toolbar .rdw-fontfamily-wrapper,
+.custom-toolbar .rdw-block-wrapper{
+  background-color: #E8F0FE !important;
+}
+
+.custom-toolbar .rdw-fontsize-dropdown,
+.custom-toolbar .rdw-fontfamily-dropdown,
+.custom-toolbar .rdw-block-dropdown {
+  background-color: #E8F0FE !important;
+  color: #000; /* Text color */
+}
+
+/* Change color when clicked */
+.custom-toolbar .rdw-option-wrapper:active {
+    background-color: #D3E3FD !important; 
+  }
