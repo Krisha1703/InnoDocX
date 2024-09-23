@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSession, signIn, signOut } from "next-auth/react";
-import SettingsIcon from "@mui/icons-material/Settings"
+import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Link from 'next/link';
 import {
@@ -14,7 +14,6 @@ import {
   MenuItem,
   Modal,
   Box,
-  Grid2,
   List,
   ListItem,
   ListItemText
@@ -23,8 +22,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SearchIcon from '@mui/icons-material/Search';
+import MicIcon from '@mui/icons-material/Mic';
 import { styled } from '@mui/material/styles';
-import CloseIcon from '@mui/icons-material/Close'
+import CloseIcon from '@mui/icons-material/Close';
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "./firebase";
 import Image from 'next/image';
@@ -37,6 +37,10 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import PhotoIcon from '@mui/icons-material/Photo';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import ContactsIcon from '@mui/icons-material/Contacts';
+
+// Voice Recognition Setup
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
 
 // Styling for the search bar
 const Search = styled('div')(({ theme, focused }) => ({
@@ -109,15 +113,13 @@ const DotMenu = () => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <Grid2 container spacing={1} style={{ padding: 8, width: 200 }}>
+        <div container spacing={1} style={{ padding: 8, width: 200 }}>
           {services.map((service, index) => (
-            <Grid2 item xs={4} key={index}>
-              <MenuItem onClick={handleClose}>
-                {service.icon}
-              </MenuItem>
-            </Grid2>
+            <MenuItem key={index} onClick={handleClose}>
+              {service.icon}
+            </MenuItem>
           ))}
-        </Grid2>
+        </div>
       </Menu>
     </>
   );
@@ -130,6 +132,7 @@ export default function HeaderNavbar() {
   const [focused, setFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [documents, setDocuments] = useState([]);
+  const [isListening, setIsListening] = useState(false);
 
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
@@ -141,6 +144,23 @@ export default function HeaderNavbar() {
 
   const handleSignOut = () => signOut({ callbackUrl: '/' });
 
+  // Voice search feature
+  const handleVoiceSearchToggle = () => {
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      recognition.start();
+      setIsListening(true);
+    }
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    setSearchQuery(transcript);
+    fetchDocuments(transcript);
+  };
+
   const handleSearchChange = (event) => {
     const value = event.target.value;
     setSearchQuery(value);
@@ -149,36 +169,30 @@ export default function HeaderNavbar() {
 
   const fetchDocuments = async (searchTerm) => {
     if (!session?.user?.email) return;
-
+  
     const docsCollection = collection(db, "userDocs", session.user.email, "docs");
-
+  
     // If searchTerm is empty, reset documents
     if (!searchTerm) {
-        setDocuments([]);
-        return;
+      setDocuments([]);
+      return;
     }
-
-    // Use startAt and endAt for better matching
-    const q = query(
-        docsCollection, 
-        where("fileName", ">=", searchTerm), 
-        where("fileName", "<=", searchTerm + '\uf8ff')
-    );
-
+  
     try {
-        const querySnapshot = await getDocs(q);
-        const fetchedDocs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-        // Debugging: Log the fetched documents
-        console.log(fetchedDocs);
-
-        setDocuments(fetchedDocs);
+      const querySnapshot = await getDocs(docsCollection);
+      const allDocs = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
+      // Filter documents based on the search term (case insensitive)
+      const filteredDocs = allDocs.filter(doc => 
+        doc.fileName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+  
+      setDocuments(filteredDocs);
     } catch (error) {
-        console.error("Error fetching documents: ", error);
+      console.error("Error fetching documents: ", error);
     }
-};
-
-
+  };
+  
 
   return (
     <>
@@ -195,7 +209,7 @@ export default function HeaderNavbar() {
           </div>
 
           <div className="w-1/2">
-            <Search focused={focused} className="rounded-full bg-[#F0F4F9] py-1">
+            <Search focused={focused} className="rounded-full bg-[#F0F4F9] py-1 flex justify-between">
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
@@ -205,7 +219,11 @@ export default function HeaderNavbar() {
                 onFocus={handleFocus}
                 onBlur={handleBlur}
                 onChange={handleSearchChange}
+                value={searchQuery}
               />
+              <IconButton onClick={handleVoiceSearchToggle} className="absolute right-0">
+                <MicIcon color={isListening ? "primary" : "action"} />
+              </IconButton>
             </Search>
           </div>
 
@@ -219,15 +237,15 @@ export default function HeaderNavbar() {
       {/* Document List */}
       {searchQuery && (
         <List className='max-w-3xl'>
-           <ListItemText primary="Search query results: " className='mx-20 my-5'/>
+          <ListItemText primary="Search query results: " className='mx-20 my-5' />
           {documents.length > 0 ? (
             documents.map(doc => (
-              <Link href={`/doc/${doc.id}`} passHref>
-              <ListItem key={doc.id} className='mx-40 bg-white hover:bg-[#E8F0FE] p-4 shadow-md cursor-pointer'>
-                 <Image src="/docs.png" width={20} height={20} alt="docs" className='mx-5'/>
-                <ListItemText primary={doc.fileName} />
-                <ListItemText primary={doc.createdAt ? new Date(doc.createdAt.seconds * 1000).toLocaleString() : 'N/A'} />
-              </ListItem>
+              <Link href={`/doc/${doc.id}`} passHref key={doc.id}>
+                <ListItem className='mx-40 bg-white hover:bg-[#E8F0FE] p-4 shadow-md cursor-pointer'>
+                  <Image src="/docs.png" width={20} height={20} alt="docs" className='mx-5' />
+                  <ListItemText primary={doc.fileName} />
+                  <ListItemText primary={doc.createdAt ? new Date(doc.createdAt.seconds * 1000).toLocaleString() : 'N/A'} />
+                </ListItem>
               </Link>
             ))
           ) : (
@@ -239,18 +257,14 @@ export default function HeaderNavbar() {
       )}
 
       {/* Account Management Modal */}
-      <Modal
-        open={modalOpen}
-        onClose={handleModalClose}
-      >
+      <Modal open={modalOpen} onClose={handleModalClose}>
         <Box className="absolute rounded-xl top-[20%] right-[2%] w-1/4 shadow-md p-4 bg-white flex flex-col items-center">
-          <CloseIcon className='cursor-pointer absolute right-5 my-2' onClick={handleModalClose}/>
+          <CloseIcon className='cursor-pointer absolute right-5 my-2' onClick={handleModalClose} />
           <Typography variant="h6" className='mt-10'>Account Management</Typography>
           <Box className="mt-2 flex flex-col items-center">
             <Image src={session.user.image} alt={session.user.name} width={50} height={50} className='rounded-full' />
             <Typography variant="body1" sx={{ mt: 1 }}>{session.user.name}</Typography>
             <Typography variant="body2" color="textSecondary">{session.user.email}</Typography>
-
             <Box className="mt-4 flex flex-col">
               <div className='flex items-center rounded-md cursor-pointer hover:bg-gray-300 justify-between w-full space-x-7 bg-gray-100 p-4'>
                 <AddCircleIcon />
@@ -271,8 +285,8 @@ export default function HeaderNavbar() {
         </Box>
       </Modal>
 
-       {/* Side Navbar */}
-       <Drawer
+      {/* Side Navbar */}
+      <Drawer
         anchor="left"
         open={open}
         onClose={handleDrawerClose}
@@ -333,17 +347,12 @@ export default function HeaderNavbar() {
           <hr className="w-full" />
 
           <div className="p-8 mt-10 float-right flex space-x-2">
-            <p className="text-xs text-gray-700 font-medium cursor-pointer hover:text-black">
-              Privacy Policy
-            </p>
+            <p className="text-xs text-gray-700 font-medium cursor-pointer hover:text-black">Privacy Policy</p>
             <p className="text-xs">.</p>
-            <p className="text-xs text-gray-700 font-medium cursor-pointer hover:text-black">
-              Terms of Service
-            </p>
+            <p className="text-xs text-gray-700 font-medium cursor-pointer hover:text-black">Terms of Service</p>
           </div>
         </div>
       </Drawer>
-
     </>
   );
 }

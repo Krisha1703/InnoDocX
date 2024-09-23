@@ -6,6 +6,10 @@ import { useSession } from "next-auth/react";
 import { db } from './firebase';
 import Link from 'next/link';
 import { Folder } from '@mui/icons-material';
+import {Canvas} from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei';
+import PaperAnimation from "../components/AnimatePaper"
+import VoiceAssisstant from "../components/VoiceAssisstant"
 import { doc, setDoc, collection, getDocs, orderBy, query, serverTimestamp, deleteDoc } from 'firebase/firestore';
 
 // Helper function to format the date
@@ -210,7 +214,9 @@ export default function CreateDoc() {
           </div>
           {modal}
           <p className="font-medium py-3 text-sm">Blank document</p>
+          <VoiceAssisstant />
         </div>
+
       </div>
 
       <div className="ml-[15vw] p-8">
