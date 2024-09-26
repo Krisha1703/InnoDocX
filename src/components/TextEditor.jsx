@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useDocumentOnce } from "react-firebase-hooks/firestore";
-import { setWordCount, setSentenceCount, setCharacterCount } from "./WordCount";
-import { findAndReplace } from "./FindAndReplaceModal"; // Import findAndReplace function
 import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
+import { setWordCount, setSentenceCount, setCharacterCount } from "./WordCount";
+import { findAndReplace } from "./FindAndReplaceModal"; // Import findAndReplace 
 import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material"; // Dropdown icon
 
-const Editor = dynamic(
-  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
+const Editor = dynamic(() =>
+  import("react-draft-wysiwyg").then((mod) => mod.Editor),
   { ssr: false }
 );
 
@@ -26,9 +26,27 @@ export default function TextEditor(props) {
   const [replaceWord, setReplaceWord] = useState("");
   const [showFindReplaceModal, setShowFindReplaceModal] = useState(false); // State for modal visibility
 
+  const [consoleInput, setConsoleInput] = useState("");
+  const [pathStack, setPathStack] = useState([]); // Tracks directory structure
+  const [availableGenres, setAvailableGenres] = useState([]);
+  const [availableAudiences, setAvailableAudiences] = useState([]);
+  const [consoleLines, setConsoleLines] = useState(["All rights reserved by Krisha 2024"]);
+
   const router = useRouter();
   const id = props.id;
+  const filename = props.fileName;
   const { data: session } = useSession();
+
+  // Initialize console with user's name and file path
+  useEffect(() => {
+    if (session?.user?.name && filename) {
+      setConsoleLines([
+        "All rights reserved by Krisha 2024",
+        `C:\\${session.user.name}\\${filename}>`
+      ]);
+      setPathStack([`C:\\${session.user.name}\\${filename}`]); // Initialize path stack
+    }
+  }, [session?.user?.name, filename]);
 
   const [snapshot] = useDocumentOnce(
     session?.user?.email
@@ -45,6 +63,67 @@ export default function TextEditor(props) {
       );
     }
   }, [snapshot]);
+
+  // Handle directory navigation based on user input
+  const handleConsoleEnter = (e) => {
+    if (e.key === "Enter") {
+      const inputText = consoleInput.trim().toLowerCase();
+      let newLines = [...consoleLines];
+      let currentPath = pathStack[pathStack.length - 1];
+
+      if (inputText === "cd ..") {
+        // Go up one directory level
+        if (pathStack.length > 1) {
+          setPathStack((prev) => prev.slice(0, -1));
+          currentPath = pathStack[pathStack.length - 2];
+        }
+        newLines.push(`> ${inputText}`, currentPath + ">");
+      } else if (inputText.startsWith("cd ")) {
+        // Handle navigation into new directories
+        const newDir = inputText.replace("cd ", "");
+        if (newDir === "story") {
+          setAvailableGenres(["horror", "mystery", "fantasy"]);
+          newLines.push(`Available genres: horror, mystery, fantasy`);
+          setPathStack((prev) => [...prev, `${currentPath}\\${newDir}`]);
+        } else if (availableGenres.includes(newDir)) {
+          const genre = newDir;
+          setAvailableAudiences(["kids", "children", "teens", "adults"]);
+          newLines.push(`Available audiences for ${genre}: kids, children, teens, adults`);
+          setPathStack((prev) => [...prev, `${currentPath}\\${genre}`]);
+        } else if (availableAudiences.includes(newDir)) {
+          const audience = newDir;
+          const genre = pathStack[pathStack.length - 1].split("\\").pop(); // Get last selected genre
+          const message = `The ${genre} story for the target audience ${audience} has been selected.`;
+          const contentState = editorState.getCurrentContent();
+          const newContentState = ContentState.createFromText(contentState.getPlainText() + '\n' + message);
+          setEditorState(EditorState.createWithContent(newContentState));
+          newLines.push(message);
+          setPathStack((prev) => [...prev, `${currentPath}\\${audience}`]);
+        } else {
+          newLines.push(`Unknown directory: ${newDir}`);
+        }
+        currentPath = pathStack[pathStack.length - 1];
+        newLines.push(`> ${inputText}`, `${currentPath}>`);
+      } else if (inputText === "clear") {
+        newLines = ["All rights reserved by Krisha 2024", `C:\\${session?.user?.name}\\${filename}>`];
+        setPathStack([`C:\\${session?.user?.name}\\${filename}`]); // Reset path
+      } else if (inputText === "ls") {
+        const content = editorState.getCurrentContent().getPlainText();
+        newLines.push(`> ${inputText}`, `Content in editor: ${content}`);
+      } else if (inputText.startsWith("cat ")) {
+        const contentToAdd = inputText.replace("cat ", "");
+        const newContent = editorState.getCurrentContent().getPlainText() + "\n" + contentToAdd;
+        const newContentState = ContentState.createFromText(newContent);
+        setEditorState(EditorState.createWithContent(newContentState));
+        newLines.push(`> ${inputText}`, `Added to editor: ${contentToAdd}`);
+      } else {
+        newLines.push(`> ${inputText}`, `Unknown command: ${inputText}`);
+      }
+
+      setConsoleLines(newLines);
+      setConsoleInput(""); // Clear the input after pressing Enter
+    }
+  };
 
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
@@ -102,9 +181,11 @@ export default function TextEditor(props) {
     setShowFindReplaceModal(!showFindReplaceModal); // Toggle modal visibility
   };
 
+
   return (
     <div className="min-h-screen pb-16">
-      <Box sx={{ padding: 1, backgroundColor: '#f9f9f9', borderRadius: 1, marginBottom: 2 }}>
+
+<Box sx={{ padding: 1, backgroundColor: '#f9f9f9', borderRadius: 1, marginBottom: 2 }}>
         <Typography variant="p" gutterBottom>
           Find and Replace
           <IconButton onClick={toggleModalVisibility} sx={{ ml: 1 }}>
@@ -145,9 +226,30 @@ export default function TextEditor(props) {
       <Editor
         editorState={editorState}
         onEditorStateChange={onEditorStateChange}
-        toolbarClassName="custom-toolbar flex sticky top-0 -z-10  !justify-center mx-5 px-4 py-2 !rounded-full !bg-[#E8F0FE]"
-        editorClassName="custom-editor mt-6 p-10 bg-white shadow-lg max-w-5xl mx-auto mb-12 border min-h-screen"
+        toolbarClassName="custom-toolbar flex sticky top-0 !justify-center mx-5 px-4 py-2 !rounded-full !bg-[#E8F0FE]"
+        editorClassName="custom-editor fixed left-10 right-10 mt-6 p-10 bg-white shadow-lg w-11/12 max-w-full mx-auto mb-12 border min-h-screen"
       />
+
+      {/* Console Structure */}
+      <div className="console-container absolute top-[200vh]  z-20 w-10/12 left-20" style={{ backgroundColor: "#1e1e1e", color: "#00ff00", padding: "10px", borderRadius: "5px", marginTop: "20px", fontFamily: "monospace" }}>
+        {consoleLines.map((line, index) => (
+          <div key={index} className="text-white">{line}</div>
+        ))}
+        <div className="text-green-400">{`${pathStack[pathStack.length - 1]}>`} <span className="text-yellow-400">{consoleInput.includes("cd ") ? "cd" : ""}</span>{consoleInput.replace(/^cd\s/, '')}</div>
+        <input
+          type="text"
+          value={consoleInput}
+          onChange={(e) => setConsoleInput(e.target.value)}
+          onKeyDown={handleConsoleEnter}
+          style={{
+            backgroundColor: "transparent",
+            color: "#00ff00",
+            border: "none",
+            outline: "none",
+            width: "90%",
+          }}
+        />
+      </div>
     </div>
   );
 }

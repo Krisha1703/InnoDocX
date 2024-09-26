@@ -196,8 +196,8 @@ export default function HeaderNavbar() {
 
   return (
     <>
-      <AppBar position="static">
-        <Toolbar className="flex justify-between bg-white text-black shadow-sm">
+      <AppBar position="sticky">
+        <Toolbar className="flex justify-between bg-white text-black">
           <div className="flex">
             <IconButton edge="start" color="inherit" onClick={handleDrawerOpen} className="mr-3">
               <MenuIcon />

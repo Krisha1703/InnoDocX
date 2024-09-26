@@ -261,7 +261,7 @@ export default function Page({ params }) {
       </header>
 
 
-      <TextEditor  id={params.id} />
+      <TextEditor  id={params.id} fileName={snapshot?.data()?.fileName}/>
 
       {/* Account Management Modal */}
       <Modal
