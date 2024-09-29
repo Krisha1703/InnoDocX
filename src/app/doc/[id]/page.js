@@ -31,6 +31,15 @@ export default function Page({ params }) {
   const [countModalOpen, setCountModalOpen] = useState(false);
   const [orientation, setOrientation] = useState('portrait');
   const [screenSize, setScreenSize] = useState('100%'); // Default screen size is 100%
+  const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
+
+  const handleAnalyticsDashboard = () => {
+    setIsDashboardModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsDashboardModalOpen(false);
+  };
   
 
   const handleScreenSizeChange = (size) => {
@@ -111,6 +120,17 @@ export default function Page({ params }) {
     setStatisticsModalOpen(false);
   };
 
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 800,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+  };
+
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu); // Toggle the clicked menu
   };
@@ -118,7 +138,7 @@ export default function Page({ params }) {
   if (!session) return <Login />;
 
   return (
-    <div>
+    <div className="">
       <header className="flex justify-between items-center p-3 pb-1">
         <span onClick={() => router.push("/")} className="cursor-pointer">
           <Image src="/docs.png" width={30} height={30} alt="docs" />
@@ -211,7 +231,52 @@ export default function Page({ params }) {
             </Modal>
 
             </div>
-            <p className="bg-white hover:bg-gray-200 p-1 px-2 hover:rounded-md cursor-pointer" onClick={() => handle3DStatisticsClick()}>Extensions</p>
+            <p className="bg-white hover:bg-gray-200 p-1 px-2 hover:rounded-md cursor-pointer" onClick={() => toggleMenu('extension')}>
+                Extension
+              </p>
+              {openMenu === 'extension' && (
+                <div className="absolute z-50 bg-white shadow-lg mt-10 p-5 px-0 rounded-md">
+                  <p className="p-2 cursor-pointer hover:bg-gray-100 px-20" onClick={() => handle3DStatisticsClick()}>3D Statistics</p>
+                  <p className="p-2 cursor-pointer hover:bg-gray-100 px-20" onClick={() => handleAnalyticsDashboard()}>Advanced Analytics Dashboard</p>
+                </div>
+              )}
+
+<Modal open={isDashboardModalOpen} onClose={closeModal}>
+        <Box sx={style}>
+          <Typography variant="h6" component="h2">
+            Analytics Dashboard
+          </Typography>
+          <div className="grid grid-cols-4 gap-4 p-4">
+            <div className="card">
+              <Typography>Total Words</Typography>
+            </div>
+            <div className="card">
+              <Typography>Unique Words</Typography>
+            </div>
+            <div className="card">
+              <Typography>Total Sentences</Typography>
+            </div>
+            <div className="card">
+              <Typography>Average Time to Read</Typography>
+            </div>
+            <div className="card">
+              <Typography>Bar Chart</Typography>
+            </div>
+            <div className="card">
+              <Typography>POS Tagging</Typography>
+            </div>
+            <div className="card">
+              <Typography>NER</Typography>
+            </div>
+            <div className="card">
+              <Typography>Text Sentiment</Typography>
+            </div>
+          </div>
+          <Button variant="contained" onClick={closeModal}>
+            Close
+          </Button>
+        </Box>
+      </Modal>
 
               {/* 3D Chart Modal */}
               <Modal

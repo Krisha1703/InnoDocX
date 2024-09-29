@@ -26,3 +26,14 @@
 .custom-toolbar .rdw-option-wrapper:active {
     background-color: #D3E3FD !important; 
   }
+
+.hover-popup {
+  position: absolute;
+  z-index: 1000; /* Make sure it appears above other content */
+  background-color: white;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  /* Adjust positioning based on your needs */
+}

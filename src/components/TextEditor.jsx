@@ -11,6 +11,7 @@ import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
 import { setWordCount, setSentenceCount, setCharacterCount } from "./WordCount";
 import { findAndReplace } from "./FindAndReplaceModal"; // Import findAndReplace 
 import { ArrowDropDown as ArrowDropDownIcon } from "@mui/icons-material"; // Dropdown icon
+import Chat from "../components/Chat"
 
 const Editor = dynamic(() =>
   import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -36,6 +37,8 @@ export default function TextEditor(props) {
   const id = props.id;
   const filename = props.fileName;
   const { data: session } = useSession();
+
+  
 
   // Initialize console with user's name and file path
   useEffect(() => {
@@ -78,7 +81,31 @@ export default function TextEditor(props) {
           currentPath = pathStack[pathStack.length - 2];
         }
         newLines.push(`> ${inputText}`, currentPath + ">");
-      } else if (inputText.startsWith("cd ")) {
+      }  else if (inputText.startsWith("look ")) {
+        const searchWord = inputText.replace("look ", "").trim().toLowerCase();
+        const contentState = editorState.getCurrentContent();
+        const plainText = contentState.getPlainText().toLowerCase();
+
+        // Split the content into words
+        const words = plainText.split(/\s+/).filter((word) => word.length > 0);
+
+        // Find all word positions
+        const wordPositions = [];
+        words.forEach((word, index) => {
+          if (word === searchWord) {
+            wordPositions.push(index + 1); // Word position (1-based index)
+          }
+        });
+
+        if (wordPositions.length > 0) {
+          newLines.push(`Found "${searchWord}" at word positions: ${wordPositions.join(', ')}`);
+        } else {
+          newLines.push(`"${searchWord}" could not be found in the text.`);
+        }
+        newLines.push(`${currentPath}>`);
+      } 
+  
+      else if (inputText.startsWith("cd ")) {
         // Handle navigation into new directories
         const newDir = inputText.replace("cd ", "");
         if (newDir === "story") {
@@ -107,7 +134,11 @@ export default function TextEditor(props) {
       } else if (inputText === "clear") {
         newLines = ["All rights reserved by Krisha 2024", `C:\\${session?.user?.name}\\${filename}>`];
         setPathStack([`C:\\${session?.user?.name}\\${filename}`]); // Reset path
-      } else if (inputText === "ls") {
+      } else if (inputText === "wc") {
+        newLines.push(`Word count: ${wordCountState}`, `Sentence count: ${sentenceCountState}`, `Character count: ${characterCountState}`);
+        newLines.push(`${currentPath}>`);
+      } 
+        else if (inputText === "ls") {
         const content = editorState.getCurrentContent().getPlainText();
         newLines.push(`> ${inputText}`, `Content in editor: ${content}`);
       } else if (inputText.startsWith("cat ")) {
@@ -124,6 +155,7 @@ export default function TextEditor(props) {
       setConsoleInput(""); // Clear the input after pressing Enter
     }
   };
+
 
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
@@ -142,7 +174,10 @@ export default function TextEditor(props) {
     setSentenceCount(sentences.length);
 
     // Calculate character count (including spaces)
-    setCharacterCount(plainText.length);
+    const charCount = plainText.length;
+    setCharacterCountState(charCount);
+    setCharacterCount(charCount);
+
 
     // Save editor state to Firestore
     setDoc(
@@ -229,13 +264,16 @@ export default function TextEditor(props) {
         toolbarClassName="custom-toolbar flex sticky top-0 !justify-center mx-5 px-4 py-2 !rounded-full !bg-[#E8F0FE]"
         editorClassName="custom-editor fixed left-10 right-10 mt-6 p-10 bg-white shadow-lg w-11/12 max-w-full mx-auto mb-12 border min-h-screen"
       />
+      <div className="Z-50">
+      <Chat />
+      </div>
 
       {/* Console Structure */}
-      <div className="console-container absolute top-[200vh]  z-20 w-10/12 left-20" style={{ backgroundColor: "#1e1e1e", color: "#00ff00", padding: "10px", borderRadius: "5px", marginTop: "20px", fontFamily: "monospace" }}>
+      <div className="console-container absolute top-[100vh] max-h-[50vh] z-20 w-10/12 left-20" style={{ backgroundColor: "#1e1e1e", color: "#00ff00", padding: "10px", borderRadius: "5px", marginTop: "20px", fontFamily: "monospace" }}>
         {consoleLines.map((line, index) => (
           <div key={index} className="text-white">{line}</div>
         ))}
-        <div className="text-green-400">{`${pathStack[pathStack.length - 1]}>`} <span className="text-yellow-400">{consoleInput.includes("cd ") ? "cd" : ""}</span>{consoleInput.replace(/^cd\s/, '')}</div>
+        <div className="text-green-400">{`${pathStack[pathStack.length - 1]}>`} <span className="text-yellow-400">{consoleInput.includes("cd ") ? "cd " : ""}</span>{consoleInput.replace(/^cd\s/, '')}</div>
         <input
           type="text"
           value={consoleInput}

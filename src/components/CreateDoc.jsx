@@ -1,13 +1,16 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Image from 'next/image';
-import { Button, Modal, Box, Typography, TextField } from '@mui/material';
+import { Button, Modal, Box, Typography, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react";
 import { db } from './firebase';
 import Link from 'next/link';
 import { Folder } from '@mui/icons-material';
 import {Canvas} from '@react-three/fiber'
+import ScrollTrigger from "./ScrollTrigger"
 import { OrbitControls } from '@react-three/drei';
+import { ToastContainer, toast } from 'react-toastify'; // Import Toastify components
+import 'react-toastify/dist/ReactToastify.css'; 
 import { doc, setDoc, collection, getDocs, orderBy, query, serverTimestamp, deleteDoc } from 'firebase/firestore';
 
 // Helper function to format the date
@@ -15,6 +18,7 @@ const formatDate = (date) => {
   const options = { day: 'numeric', month: 'short', year: 'numeric' };
   return new Date(date).toLocaleDateString('en-GB', options);
 };
+
 
 export default function CreateDoc() {
   const { data: session } = useSession();
@@ -24,22 +28,60 @@ export default function CreateDoc() {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [newFileName, setNewFileName] = useState('');
+  const [category, setCategory] = useState('');
+  const [customCategory, setCustomCategory] = useState('');
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
+  const [hoveredDocId, setHoveredDocId] = useState(null); // State for hovered document
+  const [hoveredDocPreview, setHoveredDocPreview] = useState(''); // State for hover preview
+  const [description, setDescription] = useState('');
+
+  const categories = [
+    "Educational",
+    "Business",
+    "Health and Beauty",
+    "Food and Spice",
+    "Travel and Adventure",
+    "Personal"
+  ];
 
   const createDocument = async () => {
-    if (!input || !session) return;
+    if (!session) {
+    toast.error("You must be logged in.");
+    return;
+  }
+  if (!input) {
+    toast.error("Document name is required.");
+    return;
+  }
+  if (!category) {
+    toast.error("Category is required.");
+    return;
+  }
+  if (!description) {
+    toast.error("Description is required.");
+    return;
+  }
+    const selectedCategory = isCustomCategory ? customCategory : category;
 
     try {
       const docRef = doc(collection(db, 'userDocs', session.user.email, 'docs'));
       await setDoc(docRef, {
         fileName: input,
+        Category: selectedCategory,
+        Description: description, 
         createdAt: serverTimestamp(),
         openedAt: serverTimestamp(),
       });
       setShowModal(false);
       setInput('');
+      setCategory('');
+      setCustomCategory('');
+      setIsCustomCategory(false);
       fetchDocuments();
+      toast.success("Document created successfully!");
     } catch (error) {
       console.error("Error creating document:", error);
+      toast.error("Error creating document. Please try again."); 
     }
   };
 
@@ -71,6 +113,11 @@ export default function CreateDoc() {
   const handleClose = () => {
     setShowModal(false);
     setShowOptionsModal(false);
+    setCategory('');
+    setCustomCategory('');
+    setIsCustomCategory(false);
+    setHoveredDocId(null);
+    setHoveredDocPreview('');
   };
 
   const handleOptionsClick = (doc) => {
@@ -119,6 +166,16 @@ export default function CreateDoc() {
     }
   };
 
+  const handleMouseEnter = (doc) => {
+    setHoveredDocId(doc.id);
+    setHoveredDocPreview(doc.Description); // Show filename if no content
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredDocId(null);
+    setHoveredDocPreview('');
+  };
+
   const modal = (
     <Modal open={showModal} onClose={handleClose}>
       <Box sx={{
@@ -144,6 +201,50 @@ export default function CreateDoc() {
           margin="normal"
           placeholder="Document name"
         />
+        
+        <FormControl fullWidth margin="normal">
+          <InputLabel>Category</InputLabel>
+          <Select
+            value={isCustomCategory ? '' : category}
+            onChange={(e) => {
+              if (e.target.value === "custom") {
+                setIsCustomCategory(true);
+                setCustomCategory('');
+              } else {
+                setCategory(e.target.value);
+                setIsCustomCategory(false);
+              }
+            }}
+          >
+            {categories.map((cat) => (
+              <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+            ))}
+            <MenuItem value="custom">Custom Category</MenuItem>
+          </Select>
+        </FormControl>
+
+        {isCustomCategory && (
+          <TextField
+            value={customCategory}
+            onChange={(e) => setCustomCategory(e.target.value)}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            placeholder="Enter custom category"
+          />
+        )}
+
+        <TextField
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          placeholder="Document description"
+          multiline
+          rows={3}
+        />
+
         <Box display="flex" justifyContent="flex-end" mt={2}>
           <Button onClick={handleClose} variant="contained" color="white" sx={{ mr: 2 }}>
             Cancel
@@ -193,33 +294,43 @@ export default function CreateDoc() {
   );
 
   return (
-    <section>
+    <section className=''>
+      <ToastContainer />
       <div className="bg-[#F8F9FA] pb-10 px-10">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between py-6">
-            <h4 className="text-gray-700">Start a new document</h4>
+            <h2 className="text-gray-700">Start a new document</h2>
             <MoreVertIcon />
           </div>
-          <div>
-            <Image
-              src="/createdoc.png"
-              width={150}
-              height={150}
-              alt="createdoc"
-              className='cursor-pointer border-0 hover:border-2 hover:border-blue-500'
-              onClick={() => setShowModal(true)}
-            />
+         
+          <div className="flex justify-between items-center">
+            <div>
+              <Image
+                src="/createdoc.png"
+                width={200}
+                height={200}
+                alt="createdoc"
+                className='cursor-pointer border-0 hover:border-2 hover:border-blue-500'
+                onClick={() => setShowModal(true)}
+              />
+              {modal}
+              <p className="font-medium py-3 text-md">Blank document</p>
+             </div>
+            <div className="flex-grow mx-4"> {/* Add a wrapper with flex-grow to make space for ScrollTrigger */}
+              <ScrollTrigger />
+            </div>
           </div>
-          {modal}
-          <p className="font-medium py-3 text-sm">Blank document</p>
+
+        
         </div>
 
       </div>
 
-      <div className="ml-[15vw] p-8">
+      <div className="ml-[10vw] p-8">
         {/* Header */}
-        <div className="grid grid-cols-4 gap-4 w-full px-4 mb-4">
+        <div className="grid grid-cols-5 gap-4 w-full px-4 mb-4">
           <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('fileName', 'asc')}>My Documents</p>
+          <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('Category', 'asc')}>Category</p>
           <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('createdAt', 'asc')}>Date Created</p>
           <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('updatedAt', 'asc')}>Last Opened</p>
           <p className="font-medium cursor-pointer"><Folder /></p>
@@ -230,7 +341,9 @@ export default function CreateDoc() {
           {docs.map((doc) => (
             <div
               key={doc.id}
-              className="grid grid-cols-4 gap-4 w-full p-4 py-2 rounded-full hover:bg-[#E8F0FE] cursor-pointer"
+              onMouseEnter={() => handleMouseEnter(doc)}
+              onMouseLeave={handleMouseLeave}
+              className="grid grid-cols-5 gap-4 w-full p-4 py-2  rounded-full hover:bg-[#E8F0FE] cursor-pointer"
               onClick={() => updateDocumentTimestamp(doc.id)}
             >
               <Link href={`/doc/${doc.id}`} passHref>
@@ -239,6 +352,7 @@ export default function CreateDoc() {
                   <p className="text-md">{doc.fileName}</p>
                 </div>
               </Link>
+              <p className="text-md">{doc.Category}</p>
               <p className="text-md">{formatDate(doc.createdAt?.toDate())}</p>
               <p className="text-md">{formatDate(doc.updatedAt?.toDate())}</p>
               <MoreVertIcon onClick={() => handleOptionsClick(doc)} />
@@ -246,6 +360,13 @@ export default function CreateDoc() {
           ))}
         </div>
         {optionsModal}
+
+        {hoveredDocId && (
+        <div className="absolute bottom-10 z-50 bg-white p-3 border-blue-500 border rounded-xl rounded-bl-none shadow-lg">
+          {hoveredDocPreview}
+        </div>
+      )}
+
       </div>
     </section>
   );
