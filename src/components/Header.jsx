@@ -3,6 +3,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import Link from 'next/link';
+import { ToastContainer, toast } from 'react-toastify'; // Import Toastify components
 import {
   AppBar,
   Toolbar,
@@ -149,9 +150,11 @@ export default function HeaderNavbar() {
     if (isListening) {
       recognition.stop();
       setIsListening(false);
+      toast.info("Voice activation disabled");
     } else {
       recognition.start();
       setIsListening(true);
+      toast.success("Voice activation ennabled");
     }
   };
 
@@ -190,6 +193,7 @@ export default function HeaderNavbar() {
       setDocuments(filteredDocs);
     } catch (error) {
       console.error("Error fetching documents: ", error);
+      toast.error("The file is not found, please try again!");
     }
   };
   
@@ -197,6 +201,7 @@ export default function HeaderNavbar() {
   return (
     <>
       <AppBar position="sticky">
+        <ToastContainer />
         <Toolbar className="flex justify-between bg-white text-black">
           <div className="flex">
             <IconButton edge="start" color="inherit" onClick={handleDrawerOpen} className="mr-3">

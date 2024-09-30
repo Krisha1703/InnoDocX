@@ -1,7 +1,8 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Image from 'next/image';
-import { Button, Modal, Box, Typography, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Button, Modal, Box, Typography, TextField, Select, MenuItem, Menu, InputLabel, FormControl } from '@mui/material';
 import { useState, useEffect } from 'react';
+import { ArrowDropDown } from '@mui/icons-material';
 import { useSession } from "next-auth/react";
 import { db } from './firebase';
 import Link from 'next/link';
@@ -34,8 +35,14 @@ export default function CreateDoc() {
   const [hoveredDocId, setHoveredDocId] = useState(null); // State for hovered document
   const [hoveredDocPreview, setHoveredDocPreview] = useState(''); // State for hover preview
   const [description, setDescription] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null); // For dropdown menu
+  const [showCategoryModal, setShowCategoryModal] = useState(false); // For modal
+  const open = Boolean(anchorEl);
 
-  const categories = [
+
+  const doc_categories = [
     "Educational",
     "Business",
     "Health and Beauty",
@@ -85,24 +92,33 @@ export default function CreateDoc() {
     }
   };
 
-  const fetchDocuments = async (orderField = 'createdAt', sortOrder = 'desc') => {
+  const fetchDocuments = async (filterCategory = '') => {
     if (session) {
       try {
         const q = query(
           collection(db, 'userDocs', session.user.email, 'docs'),
-          orderBy(orderField, sortOrder)
+          orderBy('createdAt', 'desc')
         );
         const querySnapshot = await getDocs(q);
-        const documents = querySnapshot.docs.map(doc => ({
+        const documents = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
-        setDocs(documents);
+        setDocs(filterCategory ? documents.filter(doc => doc.Category === filterCategory) : documents);
+
+        // Extract unique categories from documents
+        const uniqueCategories = [...new Set(documents.map(doc => doc.Category))];
+        setCategories(uniqueCategories);
+        if (filterCategory) {
+          toast.success(`Filtered documents by category: ${filterCategory}`);
+        } 
       } catch (error) {
         console.error("Error fetching documents:", error);
+        toast.error("Error fetching documents");
       }
     }
   };
+  
 
   useEffect(() => {
     if (session) {
@@ -118,6 +134,7 @@ export default function CreateDoc() {
     setIsCustomCategory(false);
     setHoveredDocId(null);
     setHoveredDocPreview('');
+    setAnchorEl(false);
   };
 
   const handleOptionsClick = (doc) => {
@@ -128,6 +145,10 @@ export default function CreateDoc() {
 
   const renameDocument = async () => {
     if (selectedDoc) {
+      if (!newFileName) {
+        toast.error("File name cannot be empty.");
+        return;
+      }
       try {
         const docRef = doc(db, 'userDocs', session.user.email, 'docs', selectedDoc.id);
         await setDoc(docRef, {
@@ -136,8 +157,10 @@ export default function CreateDoc() {
         }, { merge: true });
         setShowOptionsModal(false);
         fetchDocuments();
+        toast.success("Successfuly renamed the document");
       } catch (error) {
         console.error("Error renaming document:", error);
+        toast.error("Error renaming document");
       }
     }
   };
@@ -149,8 +172,10 @@ export default function CreateDoc() {
         await deleteDoc(docRef);
         setShowOptionsModal(false);
         fetchDocuments();
+        toast.success("Successfuly deleted the document");
       } catch (error) {
         console.error("Error deleting document:", error);
+        toast.error("Error deleting document");
       }
     }
   };
@@ -163,12 +188,48 @@ export default function CreateDoc() {
       }, { merge: true });
     } catch (error) {
       console.error("Error updating document timestamp:", error);
+      toast.error("Error updating document");
     }
   };
 
+  const handleCategoryClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+    // Handle selecting a category
+    const handleCategorySelect = (category) => {
+      setSelectedCategory(category);
+      fetchDocuments(category); // Fetch only documents with the selected category
+      handleClose(); // Close the dropdown
+    };
+
+  // Modal to display categories
+  const categoryModal = (
+    <Modal open={showCategoryModal} onClose={() => setShowCategoryModal(false)}>
+      <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 300,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 4,
+        borderRadius: 1,
+      }}>
+        <Typography variant="h6" component="h2">Select Category</Typography>
+        {categories.map((cat) => (
+          <MenuItem key={cat} onClick={() => handleCategorySelect(cat)}>
+            {cat}
+          </MenuItem>
+        ))}
+      </Box>
+    </Modal>
+  );
+
   const handleMouseEnter = (doc) => {
     setHoveredDocId(doc.id);
-    setHoveredDocPreview(doc.Description); // Show filename if no content
+    setHoveredDocPreview(doc.Description); 
   };
 
   const handleMouseLeave = () => {
@@ -216,7 +277,7 @@ export default function CreateDoc() {
               }
             }}
           >
-            {categories.map((cat) => (
+            {doc_categories.map((cat) => (
               <MenuItem key={cat} value={cat}>{cat}</MenuItem>
             ))}
             <MenuItem value="custom">Custom Category</MenuItem>
@@ -330,7 +391,27 @@ export default function CreateDoc() {
         {/* Header */}
         <div className="grid grid-cols-5 gap-4 w-full px-4 mb-4">
           <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('fileName', 'asc')}>My Documents</p>
-          <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('Category', 'asc')}>Category</p>
+          <div className='flex'>
+            <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('Category', 'asc')}>Category</p>
+            <Button
+              onClick={handleCategoryClick}
+              endIcon={<ArrowDropDown />}
+              style={{ minWidth: 0, padding: 0, color: "black"}}
+            />
+          </div>
+          {/* Dropdown Menu for Categories */}
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={() => handleCategorySelect('')}>All Categories</MenuItem>
+            {categories.map((category) => (
+              <MenuItem key={category} onClick={() => handleCategorySelect(category)}>
+                {category}
+              </MenuItem>
+            ))}
+          </Menu>
           <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('createdAt', 'asc')}>Date Created</p>
           <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('updatedAt', 'asc')}>Last Opened</p>
           <p className="font-medium cursor-pointer"><Folder /></p>
@@ -343,7 +424,7 @@ export default function CreateDoc() {
               key={doc.id}
               onMouseEnter={() => handleMouseEnter(doc)}
               onMouseLeave={handleMouseLeave}
-              className="grid grid-cols-5 gap-4 w-full p-4 py-2  rounded-full hover:bg-[#E8F0FE] cursor-pointer"
+              className="grid grid-cols-5 gap-4 w-10/12 p-4 py-2 rounded-full hover:bg-[#E8F0FE] cursor-pointer"
               onClick={() => updateDocumentTimestamp(doc.id)}
             >
               <Link href={`/doc/${doc.id}`} passHref>
@@ -352,10 +433,11 @@ export default function CreateDoc() {
                   <p className="text-md">{doc.fileName}</p>
                 </div>
               </Link>
-              <p className="text-md">{doc.Category}</p>
-              <p className="text-md">{formatDate(doc.createdAt?.toDate())}</p>
-              <p className="text-md">{formatDate(doc.updatedAt?.toDate())}</p>
-              <MoreVertIcon onClick={() => handleOptionsClick(doc)} />
+              <p className="text-md ml-10 text-nowrap">{doc.Category}</p>
+              
+              <p className="text-md  ml-[6vw] text-nowrap">{formatDate(doc.createdAt?.toDate())}</p>
+              <p className="text-md  ml-[8.5vw] text-nowrap">{formatDate(doc.updatedAt?.toDate())}</p>
+              <MoreVertIcon onClick={() => handleOptionsClick(doc)} className="ml-[11vw]"/>
             </div>
           ))}
         </div>
