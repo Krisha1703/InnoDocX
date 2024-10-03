@@ -1,11 +1,10 @@
 "use client";
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
-import { db } from '../components/firebase';  // Import your initialized Firestore
+import { db } from '../components/firebase'; 
 import Header from "../components/Header";
 import CreateDoc from "../components/CreateDoc";
 import Login from "../components/Login";
 import { useEffect } from 'react';
-
 import { useSession } from "next-auth/react";
 
 export default function Home() {
