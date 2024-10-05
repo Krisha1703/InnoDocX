@@ -37,3 +37,21 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   /* Adjust positioning based on your needs */
 }
+
+
+/* globals.css or other global CSS file */
+
+/* Default Light Mode Styles */
+body {
+  background-color: #fff;
+  color: #000;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
+
+/* You can add more styles to affect other elements as needed */
+

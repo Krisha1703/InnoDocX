@@ -6,6 +6,7 @@ import CreateDoc from "../components/CreateDoc";
 import Login from "../components/Login";
 import { useEffect } from 'react';
 import { useSession } from "next-auth/react";
+import { ThemeProvider } from '../components/ThemeContext';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -36,10 +37,13 @@ export default function Home() {
   }
 
   return (
+    <ThemeProvider>
     <main className="">
+      
       <Header />
       <CreateDoc />
  
     </main>
+    </ThemeProvider>
   );
 }

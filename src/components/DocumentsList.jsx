@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react'; // Import useContext
 import { collection, getDocs } from "firebase/firestore";
 import { List, ListItem, ListItemText } from '@mui/material';
 import { useSession } from "next-auth/react";
@@ -6,10 +6,12 @@ import { db } from "./firebase";
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
+import ThemeContext from './ThemeContext'; // Import your ThemeContext
 
 const DocumentsList = ({ searchQuery }) => {
   const { data: session } = useSession();
   const [documents, setDocuments] = useState([]);
+  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -42,7 +44,9 @@ const DocumentsList = ({ searchQuery }) => {
           {documents.length > 0 ? (
             documents.map(doc => (
               <Link href={`/doc/${doc.id}`} passHref key={doc.id}>
-                <ListItem className='mx-40 bg-white hover:bg-[#E8F0FE] p-4 shadow-md cursor-pointer'>
+                <ListItem 
+                  className={`mx-40 ${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-white hover:bg-[#E8F0FE]'} p-4 shadow-md cursor-pointer`}
+                >
                   <Image src="/docs.png" width={20} height={20} alt="docs" className='mx-5' />
                   <ListItemText primary={doc.fileName} />
                   <ListItemText primary={doc.createdAt ? new Date(doc.createdAt.seconds * 1000).toLocaleString() : 'N/A'} />
@@ -51,7 +55,7 @@ const DocumentsList = ({ searchQuery }) => {
             ))
           ) : (
             <ListItem>
-              <ListItemText primary="No documents found" />
+              <ListItemText primary="No documents found" className={isDarkMode ? 'text-white' : ''} />
             </ListItem>
           )}
         </List>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useSession } from "next-auth/react";
 import DotMenu from "./DotMenu";
 import AccountModal from "./AccountModal";
@@ -8,9 +8,11 @@ import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import Image from 'next/image';
+import DeveloperModeButton from "./DeveloperModeButton"
 import { Search, SearchIconWrapper, StyledInputBase } from './Search';
 import MicIcon from '@mui/icons-material/Mic';
 import DocumentsList from './DocumentsList'; // Import the DocumentsList component
+import  ThemeContext  from './ThemeContext'; // Import your ThemeContext
 
 // Voice Recognition Setup
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -18,6 +20,7 @@ const recognition = new SpeechRecognition();
 
 export default function HeaderNavbar() {
   const { data: session } = useSession();
+  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
 
   const [state, setState] = useState({
     modalOpen: false,
@@ -55,24 +58,24 @@ export default function HeaderNavbar() {
   };
 
   return (
-    <>
+    <div>
       <AppBar position="sticky">
         <ToastContainer />
-        <Toolbar className="flex justify-between bg-white text-black">
+        <Toolbar className={`flex justify-between ${isDarkMode ? 'bg-black text-white' : 'bg-white text-black'} `}>
 
           <div className="flex">
             <IconButton edge="start" color="inherit" onClick={() => toggleState('drawerOpen')} className="mr-3">
               <MenuIcon />
             </IconButton>
             
-            <Typography variant="h6" noWrap className="flex items-center gap-3 text-gray-700">
+            <Typography variant="h6" noWrap className={`flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-700'} `}>
               <Image src="/docs.png" width={30} height={30} alt="docs" />
               Docs
             </Typography>
           </div>
 
           <div className="w-1/2">
-            <Search focused={focused} className="rounded-full bg-[#F0F4F9] py-1 flex justify-between">
+            <Search  className={`rounded-full ${isDarkMode? 'bg-gray-700': 'bg-[#F0F4F9]'}  py-1 flex justify-between`}>
               
               <SearchIconWrapper>
                 <SearchIcon />
@@ -93,6 +96,8 @@ export default function HeaderNavbar() {
 
             </Search>
           </div>
+
+          <DeveloperModeButton />
 
           <div className="flex space-x-3">
             <DotMenu />
@@ -117,6 +122,6 @@ export default function HeaderNavbar() {
 
       {/* Sidebar Drawer */}
       <SidebarDrawer open={drawerOpen} handleDrawerClose={() => toggleState('drawerOpen')} />
-    </>
+    </div>
   );
 }

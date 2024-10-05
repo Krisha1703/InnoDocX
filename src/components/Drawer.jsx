@@ -2,9 +2,12 @@ import { Drawer as MuiDrawer, Typography } from "@mui/material";
 import Image from "next/image";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import ThemeContext from './ThemeContext'; // Import your ThemeContext
 
 const SidebarDrawer = ({ open, handleDrawerClose }) => {
+  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+
   return (
     <MuiDrawer
       anchor="left"
@@ -12,7 +15,14 @@ const SidebarDrawer = ({ open, handleDrawerClose }) => {
       onClose={handleDrawerClose}
       ModalProps={{ onBackdropClick: handleDrawerClose }}
     >
-      <div style={{ width: 300 }} onMouseLeave={handleDrawerClose}>
+      <div
+        style={{
+          width: 300,
+          backgroundColor: isDarkMode ? '#424242' : '#ffffff', // Set background color based on dark mode
+          color: isDarkMode ? '#ffffff' : '#000000', // Set text color based on dark mode
+        }}
+        onMouseLeave={handleDrawerClose}
+      >
         <Typography variant="h5" className="p-8 pb-4">
           <span className="text-blue-500 font-medium">G</span>
           <span className="text-red-500 font-medium">o</span>
@@ -44,13 +54,13 @@ const SidebarDrawer = ({ open, handleDrawerClose }) => {
         {/* Settings & Help */}
         <div className="px-8 py-4 flex flex-col space-y-4 scale-90">
           <div className="flex space-x-4 items-center">
-            <SettingsIcon />
-            <Typography className="font-medium">Settings</Typography>
+            <SettingsIcon style={{ color: isDarkMode ? '#ffffff' : '#000000' }} />
+            <Typography className="font-medium">{isDarkMode ? <span style={{ color: '#ffffff' }}>Settings</span> : 'Settings'}</Typography>
           </div>
           
           <div className="flex space-x-4 items-center">
-            <HelpOutlineIcon />
-            <Typography className="font-medium">Help & Feedback</Typography>
+            <HelpOutlineIcon style={{ color: isDarkMode ? '#ffffff' : '#000000' }} />
+            <Typography className="font-medium">{isDarkMode ? <span style={{ color: '#ffffff' }}>Help & Feedback</span> : 'Help & Feedback'}</Typography>
           </div>
         </div>
 
@@ -66,11 +76,11 @@ const SidebarDrawer = ({ open, handleDrawerClose }) => {
 
         {/* Footer */}
         <div className="p-8 mt-10 float-right flex space-x-2">
-          <p className="text-xs text-gray-700 font-medium cursor-pointer hover:text-black">
+          <p className="text-xs font-medium cursor-pointer hover:text-black" style={{ color: isDarkMode ? '#ffffff' : '#000000' }}>
             Privacy Policy
           </p>
           <p className="text-xs">.</p>
-          <p className="text-xs text-gray-700 font-medium cursor-pointer hover:text-black">
+          <p className="text-xs font-medium cursor-pointer hover:text-black" style={{ color: isDarkMode ? '#ffffff' : '#000000' }}>
             Terms of Service
           </p>
         </div>
