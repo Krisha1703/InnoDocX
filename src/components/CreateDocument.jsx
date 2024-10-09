@@ -47,6 +47,12 @@ const CreateDocument = ({ showModal, setShowModal }) => {
     }
   }, [docName, setInput]);
 
+  useEffect(() => {
+    if(description){
+      setDescription(description);
+    }
+  }, [description, setDescription]);
+
   // Handle document creation
   const createDocument = async () => {
     if (!session) {
@@ -237,7 +243,16 @@ const CreateDocument = ({ showModal, setShowModal }) => {
 
         {/* Action buttons */}
         <Box className="flex justify-between items-center" mt={2}>
-        <VoiceCreate setDocName={setDocName} />
+        <VoiceCreate 
+          setDocName={setDocName}
+          setCategory={setCategory}
+          setCustomCategory={setCustomCategory}
+          setDocDescription={setDescription}
+          docCategories={["Business", "Educational", "Health and Beauty", "Food and Spice", "Personal", "Travel and Adventure"]}
+          isCustomCategory={isCustomCategory}
+          setIsCustomCategory={setIsCustomCategory}
+        />
+
           <Button onClick={handleClose} variant="contained">
             Cancel
           </Button>

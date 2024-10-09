@@ -17,7 +17,9 @@
 
 .custom-toolbar .rdw-fontsize-dropdown,
 .custom-toolbar .rdw-fontfamily-dropdown,
-.custom-toolbar .rdw-block-dropdown {
+.custom-toolbar .rdw-block-dropdown,
+.custom-toolbar .rdw-text-align-dropdown,
+.custom-toolbar .rdw-list-dropdown {
   background-color: #E8F0FE !important;
   color: #000; /* Text color */
 }
