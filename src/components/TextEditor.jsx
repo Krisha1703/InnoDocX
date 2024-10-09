@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { EditorState, ContentState, convertFromRaw, convertToRaw } from "draft-js";
 import { db } from "./firebase";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ import { setWordCount, setSentenceCount, setCharacterCount } from "./WordCount";
 import Chat from "../components/Chat"
 import DeveloperConsole from "./DeveloperConsole"
 import FindAndReplaceModal from "./FindAndReplaceModal"
+import ThemeContext from "@/components/ThemeContext";
 
 const Editor = dynamic(() =>
   import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -23,6 +24,7 @@ export default function TextEditor(props) {
   const id = props.id;
   const filename = props.fileName;
   const { data: session } = useSession();
+  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
 
   const [snapshot] = useDocumentOnce(
     session?.user?.email
@@ -110,18 +112,18 @@ export default function TextEditor(props) {
   
 
   return (
-    <div className="min-h-screen pb-16">
+    <div className={`min-h-screen pb-16`}>
 
       {/* Find And Replace Modal */}
       <FindAndReplaceModal editorState={editorState} setEditorState={setEditorState} session={session} id={id}/>
       
       {/* Text Editor And Toolbar Menus */}
-      <div className="flex flex-col relative">
+      <div className={`flex flex-col relative`}>
         <Editor
           editorState={editorState}
           onEditorStateChange={onEditorStateChange}
-          toolbarClassName="custom-toolbar z-10 sticky top-0 !justify-center mx-5 px-4 py-2 !rounded-full !bg-[#E8F0FE]"
-          editorClassName="custom-editor p-10 bg-white shadow-lg w-11/12 max-w-full mx-auto mb-2 border min-h-[70vh] relative"
+          toolbarClassName={`custom-toolbar z-10 sticky top-0 !justify-center mx-5 px-4 py-2 !rounded-full ${isDarkMode ? '!bg-black' : '!bg-[#E8F0FE]'} `}
+          editorClassName={`custom-editor p-10  shadow-lg w-11/12 max-w-full mx-auto mb-2 border min-h-[70vh] relative`}
           toolbar={{
             options: [
               'inline', 
@@ -156,16 +158,18 @@ export default function TextEditor(props) {
           }}
         />
         {/* Developer Console */}
-        <div className="developer-console-container fixed bottom-0 left-0 right-0 w-11/12 mx-auto bg-[#1e1e1e] text-green-400 p-2 overflow-y-auto max-h-[25vh]">
-          <DeveloperConsole
-            filename={filename}
-            editorState={editorState}
-            setEditorState={setEditorState}
-            wordCountState={wordCountState}
-            sentenceCountState={sentenceCountState}
-            characterCountState={characterCountState}
-          />
-        </div>
+        {isDarkMode && (
+          <div className="developer-console-container fixed bottom-0 left-0 right-0 w-11/12 mx-auto bg-[#1e1e1e] text-green-400 p-2 overflow-y-auto max-h-[25vh]">
+            <DeveloperConsole
+              filename={filename}
+              editorState={editorState}
+              setEditorState={setEditorState}
+              wordCountState={wordCountState}
+              sentenceCountState={sentenceCountState}
+              characterCountState={characterCountState}
+            />
+          </div>
+        )}
       </div>
 
 

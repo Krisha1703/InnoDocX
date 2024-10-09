@@ -41,7 +41,7 @@ const DeveloperModeButton = () => {
       </motion.button>
 
       {/* Glimpse of Developer Mode */}
-      {isDeveloperMode && (
+      {/*{isDeveloperMode && (
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }} // Initial state for the logs
           animate={{ opacity: 1, scale: 1 }}   // Final state for the logs
@@ -58,13 +58,9 @@ const DeveloperModeButton = () => {
             maxWidth: '500px',
           }}
         >
-          <p>// Developer Logs</p>
-          <p>console.log("Developer Mode Enabled");</p>
-          <p>function debugMode() {"{"}</p>
-          <p style={{ paddingLeft: '20px' }}> // Debugging tools enabled </p>
-          <p>{"}"}</p>
+         
         </motion.div>
-      )}
+      )}*/}
     </div>
   );
 };

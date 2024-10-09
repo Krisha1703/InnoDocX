@@ -115,6 +115,49 @@ const DeveloperConsole = ({ filename, editorState, setEditorState, wordCountStat
     }
   };
 
+  // Handle the "rm" command to clear the editor (delete file content)
+  const handleRMCommand = (newLines) => {
+    const newContentState = ContentState.createFromText("");
+    setEditorState(EditorState.createWithContent(newContentState));
+    newLines.push("File content deleted.");
+  };
+
+
+
+  // Handle the "head" command to print the first 10 lines
+  const handleHeadCommand = (newLines) => {
+    const contentState = editorState.getCurrentContent();
+    const text = contentState.getPlainText();
+    const lines = text.split("\n").slice(0, 10);  // Get first 10 lines
+    newLines.push(...lines, `Displayed first 10 lines of the file.`);
+  };
+
+  // Handle the "tail" command to print the last 10 lines
+  const handleTailCommand = (newLines) => {
+    const contentState = editorState.getCurrentContent();
+    const text = contentState.getPlainText();
+    const lines = text.split("\n").slice(-10);  // Get last 10 lines
+    newLines.push(...lines, `Displayed last 10 lines of the file.`);
+  };
+
+  // Handle the "date" command to show current date
+  const handleDateCommand = (newLines) => {
+    const currentDate = new Date().toLocaleDateString();
+    newLines.push(`Current date: ${currentDate}`);
+  };
+
+  // Handle the "time" command to show current time
+  const handleTimeCommand = (newLines) => {
+    const currentTime = new Date().toLocaleTimeString();
+    newLines.push(`Current time: ${currentTime}`);
+  };
+
+  // Handle the "day" command to show current day of the week
+  const handleDayCommand = (newLines) => {
+    const currentDay = new Date().toLocaleString('en-US', { weekday: 'long' });
+    newLines.push(`Today is: ${currentDay}`);
+  };
+
   // Handle unknown command
   const handleUnknownCommand = (inputText, newLines) => {
     newLines.push(`Unknown command: ${inputText}`);
@@ -130,6 +173,18 @@ const DeveloperConsole = ({ filename, editorState, setEditorState, wordCountStat
       handleLookCommand(inputText, newLines);
     } else if (inputText === "wc") {
       handleWCCommand(newLines);
+    } else if (inputText === "rm") {
+      handleRMCommand(newLines);
+    } else if (inputText === "head") {
+      handleHeadCommand(newLines);
+    } else if (inputText === "tail") {
+      handleTailCommand(newLines);
+    } else if (inputText === "date") {
+      handleDateCommand(newLines);
+    } else if (inputText === "time") {
+      handleTimeCommand(newLines);
+    } else if (inputText === "day") {
+      handleDayCommand(newLines);
     } else if (inputText === "clear") {
       handleClearCommand(setConsoleLines, setPathStack);  // Call clear function here
     } else if (inputText.startsWith("echo ")) {
@@ -158,7 +213,7 @@ const DeveloperConsole = ({ filename, editorState, setEditorState, wordCountStat
   };
 
   return (
-    <div className='text-sm font-sans'>
+    <div className='text-sm p-4' style={{fontFamily: "monospace"}}>
       {consoleLines.map((line, index) => (
         <div key={index} className="text-white">{line}</div>
       ))}

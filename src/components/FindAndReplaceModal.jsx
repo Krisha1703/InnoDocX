@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { doc, setDoc, collection } from "firebase/firestore";
 import { convertToRaw, EditorState, ContentState } from "draft-js";
 import { db } from "./firebase"; // Adjust this import to match your project structure
+import ThemeContext from "@/components/ThemeContext";
+
 
 const findAndReplace = (text, findWord, replaceWord) => {
   const regex = new RegExp(findWord, "g");
@@ -14,6 +16,8 @@ const FindAndReplaceModal = ({ editorState, setEditorState, id, session }) => {
   const [findWord, setFindWord] = useState("");
   const [replaceWord, setReplaceWord] = useState("");
   const [showFindReplaceModal, setShowFindReplaceModal] = useState(false);
+
+  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
 
   const handleFindAndReplace = () => {
     const plainText = editorState.getCurrentContent().getPlainText();
@@ -41,11 +45,11 @@ const FindAndReplaceModal = ({ editorState, setEditorState, id, session }) => {
   };
 
   return (
-    <Box sx={{ padding: 1, backgroundColor: "#f9f9f9", borderRadius: 1, marginBottom: 2 }}>
+    <Box sx={{ padding: 1, backgroundColor: isDarkMode ? "#333333" : "#f9f9f9", borderRadius: 1, marginBottom: 2 }}>
       <Typography variant="body1" gutterBottom>
         Find and Replace
         <IconButton onClick={toggleModalVisibility} sx={{ ml: 1 }}>
-          <ArrowDropDownIcon />
+          <ArrowDropDownIcon sx={{color: isDarkMode ? "white" : "black"}}/>
         </IconButton>
       </Typography>
 
@@ -58,6 +62,30 @@ const FindAndReplaceModal = ({ editorState, setEditorState, id, session }) => {
             onChange={(e) => setFindWord(e.target.value)}
             fullWidth
             margin="normal"
+            InputProps={{
+              sx: {
+                color: isDarkMode ? "white" : "black", // Change input text color based on dark mode
+              },
+            }}
+            InputLabelProps={{
+              sx: {
+                color: isDarkMode ? "white" : "black", // Change label color based on dark mode
+              },
+            }}
+
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: isDarkMode ? "white" : "black", // Border color based on dark mode
+                },
+                '&:hover fieldset': {
+                  borderColor: isDarkMode ? "white" : "black", // Border color on hover
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: isDarkMode ? "white" : "black", // Border color when focused
+                },
+              },
+            }}
           />
           <TextField
             label="Replace with"
@@ -66,6 +94,30 @@ const FindAndReplaceModal = ({ editorState, setEditorState, id, session }) => {
             onChange={(e) => setReplaceWord(e.target.value)}
             fullWidth
             margin="normal"
+            InputProps={{
+              sx: {
+                color: isDarkMode ? "white" : "black", // Change input text color based on dark mode
+              },
+            }}
+            InputLabelProps={{
+              sx: {
+                color: isDarkMode ? "white" : "black", // Change label color based on dark mode
+              },
+            }}
+
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: isDarkMode ? "white" : "black", // Border color based on dark mode
+                },
+                '&:hover fieldset': {
+                  borderColor: isDarkMode ? "white" : "black", // Border color on hover
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: isDarkMode ? "white" : "black", // Border color when focused
+                },
+              },
+            }}
           />
           <Button
             variant="contained"

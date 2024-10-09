@@ -5,29 +5,38 @@
 /* Custom toolbar option styles */
 .custom-toolbar .rdw-option-wrapper {
   color: #000;
-  background-color: #E8F0FE !important;
+  background-color: #E8F0FE !important; /* Consistent background for all options */
 }
 
 /* Styling for dropdown menus */
 .custom-toolbar .rdw-fontsize-wrapper,
 .custom-toolbar .rdw-fontfamily-wrapper,
-.custom-toolbar .rdw-block-wrapper{
-  background-color: #E8F0FE !important;
+.custom-toolbar .rdw-block-wrapper,
+.custom-toolbar .rdw-text-align-wrapper,
+.custom-toolbar .rdw-list-wrapper {
+  background-color: #E8F0FE !important; /* Ensures dropdowns match toolbar */
 }
 
+/* Dropdown menu styles */
 .custom-toolbar .rdw-fontsize-dropdown,
 .custom-toolbar .rdw-fontfamily-dropdown,
 .custom-toolbar .rdw-block-dropdown,
 .custom-toolbar .rdw-text-align-dropdown,
 .custom-toolbar .rdw-list-dropdown {
-  background-color: #E8F0FE !important;
+  background-color: #E8F0FE !important; /* Matches toolbar */
   color: #000; /* Text color */
 }
 
 /* Change color when clicked */
 .custom-toolbar .rdw-option-wrapper:active {
-    background-color: #D3E3FD !important; 
-  }
+  background-color: #D3E3FD !important; 
+}
+
+/* Additional dropdown specific hover effects if needed */
+.custom-toolbar .rdw-dropdown-wrapper:hover {
+  background-color: #D3E3FD !important; /* Change color on hover */
+}
+
 
 .hover-popup {
   position: absolute;
