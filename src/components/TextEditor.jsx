@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useDocumentOnce } from "react-firebase-hooks/firestore";
-import { setWordCount, setSentenceCount, setCharacterCount } from "./WordCount";
-import Chat from "../components/Chat"
-import DeveloperConsole from "./DeveloperConsole"
-import FindAndReplaceModal from "./FindAndReplaceModal"
+import { setWordCount, setSentenceCount, setCharacterCount, setUniqueCount } from "./WordCount";
+import Chat from "../components/Chat";
+import DeveloperConsole from "./DeveloperConsole";
+import FindAndReplaceModal from "./FindAndReplaceModal";
 import ThemeContext from "@/components/ThemeContext";
 
 const Editor = dynamic(() =>
@@ -19,12 +19,11 @@ const Editor = dynamic(() =>
 );
 
 export default function TextEditor(props) {
-
   const router = useRouter();
   const id = props.id;
   const filename = props.fileName;
   const { data: session } = useSession();
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext);
 
   const [snapshot] = useDocumentOnce(
     session?.user?.email
@@ -32,13 +31,13 @@ export default function TextEditor(props) {
       : null
   );
 
-
-  //Editor
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
   const [wordCountState, setWordCountState] = useState(0);
   const [sentenceCountState, setSentenceCountState] = useState(0);
   const [characterCountState, setCharacterCountState] = useState(0);
+  const [uniqueCountState, setUniqueCountState] = useState(0);
+  const [averageReadingTime, setAverageReadingTime] = useState(0);
 
   useEffect(() => {
     if (snapshot?.data()?.editorState) {
@@ -50,26 +49,55 @@ export default function TextEditor(props) {
     }
   }, [snapshot]);
 
-  const onEditorStateChange = (editorState) => {
+  const onEditorStateChange = async (editorState) => {
     setEditorState(editorState);
-
-    // Extract text from the editor state
     const plainText = editorState.getCurrentContent().getPlainText();
 
-    // Calculate word count
-    const words = plainText.trim().split(/\s+/).filter((word) => word.length > 0);
-    setWordCountState(words.length);
-    setWordCount(words.length);
-
-    // Calculate sentence count
+    // Calculate word count and sentences count
     const sentences = plainText.split(/[.!?]+/).filter((sentence) => sentence.trim().length > 0);
     setSentenceCountState(sentences.length);
     setSentenceCount(sentences.length);
 
-    // Calculate character count (including spaces)
     const charCount = plainText.length;
     setCharacterCountState(charCount);
     setCharacterCount(charCount);
+
+    // Fetch tokens from API for word count
+const response = await fetch('/api/preprocess', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ text: plainText }),
+});
+
+    
+if (response.ok) {
+  try {
+    const data = await response.json();
+    const { tokens, wordCount, uniqueWordCount, uniqueTokens } = data;
+
+    // Console logging for debugging
+    console.log('Tokenized Words:', tokens); // Log tokenized words
+    console.log('Word Count:', wordCount); // Log total word count
+    console.log('Unique Word Count:', uniqueWordCount); // Log unique word count
+    console.log('Unique Tokens:', uniqueTokens); // Log unique tokens
+
+    // Update state with fetched values
+    setWordCountState(wordCount); // Set word count state
+    setWordCount(wordCount); // Save word count
+
+    setUniqueCountState(uniqueWordCount);
+    console.log('Unique Count State updated to:', uniqueCountState);
+    setUniqueCount(uniqueWordCount);
+
+  } catch (error) {
+    console.error('Error parsing JSON:', error); // Debug JSON parsing errors
+  }
+} else {
+  // Handle non-200 responses
+  console.error('Fetch error:', response.status, response.statusText); // Log fetch errors
+}
 
     // Save editor state to Firestore
     setDoc(
@@ -88,36 +116,26 @@ export default function TextEditor(props) {
       const reader = new FileReader();
       reader.onloadend = () => {
         const fileType = file.type;
-  
         if (fileType.startsWith('image/')) {
-          // Handle image uploads
           resolve({ data: { link: reader.result } });
         } else if (fileType.startsWith('video/')) {
-          // Handle video uploads
           resolve({ data: { link: reader.result } });
         } else if (fileType.startsWith('audio/')) {
-          // Handle audio uploads
           resolve({ data: { link: reader.result } });
         } else if (fileType === 'application/vnd.ms-excel' || fileType === 'text/csv') {
-          // Handle CSV or Excel uploads
-          resolve({ data: { link: reader.result } }); // Modify this to handle Excel files if needed
+          resolve({ data: { link: reader.result } });
         } else {
           reject(new Error('Unsupported file type'));
         }
       };
-  
       reader.readAsDataURL(file);
     });
   };
-  
 
   return (
     <div className={`min-h-screen pb-16`}>
-
-      {/* Find And Replace Modal */}
-      <FindAndReplaceModal editorState={editorState} setEditorState={setEditorState} session={session} id={id}/>
+      <FindAndReplaceModal editorState={editorState} setEditorState={setEditorState} session={session} id={id} />
       
-      {/* Text Editor And Toolbar Menus */}
       <div className={`flex flex-col relative`}>
         <Editor
           editorState={editorState}
@@ -139,25 +157,25 @@ export default function TextEditor(props) {
               'history'
             ],
             textAlign: {
-              inDropdown: true, // Use dropdown for text alignment
-              options: ['left', 'center', 'right', 'justify'], // Text alignment options
+              inDropdown: true,
+              options: ['left', 'center', 'right', 'justify'],
             },
             list: {
-              inDropdown: true, // Use dropdown for list options
-              options: ['unordered', 'ordered'], // List options
+              inDropdown: true,
+              options: ['unordered', 'ordered'],
             },
             image: {
-              uploadCallback: uploadMediaCallback, // Image upload function
+              uploadCallback: uploadMediaCallback,
             },
             video: {
-              uploadCallback: uploadMediaCallback, // Video upload function
+              uploadCallback: uploadMediaCallback,
             },
             audio: {
-              uploadCallback: uploadMediaCallback, // Audio upload function
+              uploadCallback: uploadMediaCallback,
             },
           }}
         />
-        {/* Developer Console */}
+        
         {isDarkMode && (
           <div className="developer-console-container fixed bottom-0 left-0 right-0 w-11/12 mx-auto bg-[#1e1e1e] text-green-400 p-2 overflow-y-auto max-h-[25vh]">
             <DeveloperConsole
@@ -171,12 +189,6 @@ export default function TextEditor(props) {
           </div>
         )}
       </div>
-
-
-      {/*<div className="z-50">
-        <Chat />
-      </div>*/}
-
     </div>
   );
 }

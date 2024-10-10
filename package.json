@@ -21,6 +21,7 @@
     "draft-js": "^0.11.7",
     "firebase": "^10.13.1",
     "framer-motion": "^11.4.0",
+    "lemmatizer": "^0.0.1",
     "natural": "^8.0.1",
     "next": "14.2.7",
     "next-auth": "^4.24.7",
@@ -30,6 +31,7 @@
     "react-draft-wysiwyg": "^1.15.0",
     "react-firebase-hooks": "^5.1.1",
     "react-toastify": "^10.0.5",
+    "stopword": "^3.1.1",
     "three": "^0.168.0"
   },
   "devDependencies": {

@@ -16,3 +16,10 @@ export let characterCount = 0;
 export const setCharacterCount = (count) => {
   characterCount = count;
 };
+
+export let uniqueCount = 0;
+
+export const setUniqueCount = (count) => {
+  uniqueCount = count;
+};
+

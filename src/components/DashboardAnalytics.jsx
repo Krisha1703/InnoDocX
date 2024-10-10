@@ -1,9 +1,11 @@
 import { Modal, Box, Typography, Button } from "@mui/material"
 import { useContext } from "react";
+import { wordCount, sentenceCount, uniqueCount } from './WordCount';
 import ThemeContext from "./ThemeContext";
 
 const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
   const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+
   const style = {
     position: 'absolute',
     top: '50%',
@@ -23,12 +25,15 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
       <div className="grid grid-cols-4 gap-4 p-4">
         <div className="card">
           <Typography>Total Words</Typography>
+          <Typography>{wordCount}</Typography>
         </div>
         <div className="card">
           <Typography>Unique Words</Typography>
+          <Typography>{uniqueCount}</Typography>
         </div>
         <div className="card">
           <Typography>Total Sentences</Typography>
+          <Typography>{sentenceCount}</Typography>
         </div>
         <div className="card">
           <Typography>Average Time to Read</Typography>
