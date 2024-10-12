@@ -1,7 +1,9 @@
 import { Modal, Box, Typography, Button } from "@mui/material"
 import { useContext } from "react";
-import { wordCount, sentenceCount, uniqueCount } from './WordCount';
+import { wordCount, sentenceCount, uniqueCount, averageReadingTime } from './WordCount';
 import ThemeContext from "./ThemeContext";
+import BarChart from "./BarChart"
+import PieChart from "./PieChart";
 
 const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
   const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
@@ -11,7 +13,7 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 800,
+    width: '90vw',
     boxShadow: 24,
     p: 4,
   };
@@ -22,7 +24,7 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
       <Typography variant="h6" component="h2">
         Analytics Dashboard
       </Typography>
-      <div className="grid grid-cols-4 gap-4 p-4">
+      <div className="grid grid-cols-4 gap-10 p-4 ">
         <div className="card">
           <Typography>Total Words</Typography>
           <Typography>{wordCount}</Typography>
@@ -37,12 +39,15 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
         </div>
         <div className="card">
           <Typography>Average Time to Read</Typography>
+          <Typography>{averageReadingTime}</Typography>
         </div>
         <div className="card">
           <Typography>Bar Chart</Typography>
+          <BarChart />
         </div>
         <div className="card">
           <Typography>POS Tagging</Typography>
+          <PieChart />
         </div>
         <div className="card">
           <Typography>NER</Typography>
@@ -51,7 +56,7 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
           <Typography>Text Sentiment</Typography>
         </div>
       </div>
-      <Button variant="contained" onClick={handleModalClose}>
+      <Button variant="contained" onClick={handleModalClose} sx={{marginTop: "2vw"}} >
         Close
       </Button>
     </Box>

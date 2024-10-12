@@ -27,6 +27,7 @@
     "next-auth": "^4.24.7",
     "node-nlp": "^4.27.0",
     "react": "^18",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
     "react-draft-wysiwyg": "^1.15.0",
     "react-firebase-hooks": "^5.1.1",

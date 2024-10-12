@@ -23,3 +23,11 @@ export const setUniqueCount = (count) => {
   uniqueCount = count;
 };
 
+export let averageReadingTime = 0;
+
+// Function to set average reading time
+export const setAverageReadingTime = () => {
+  // Average reading speed: 250 words per minute
+  averageReadingTime = (wordCount / 250) * 60; // in seconds
+};
+

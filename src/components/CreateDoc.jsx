@@ -41,7 +41,7 @@ export default function CreateDoc() {
               )}
               
               <p className="font-medium py-3 text-md">Blank document</p>
-              <VoiceAssistant />
+             {/* <VoiceAssistant /> */}
             </div>
 
             <div className="flex-grow mx-4"> {/* Add a wrapper with flex-grow to make space for ScrollTrigger */}
