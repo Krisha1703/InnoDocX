@@ -11,16 +11,14 @@ export default async function handler(req, res) {
       const result = await sentiment.getSentiment(input);
       const sentimentType = result.score > 0 ? 'Positive' : result.score < 0 ? 'Negative' : 'Neutral';
 
-      // Normalize the score to a scale of 0 to 1
-      // Assuming the score is within the range of -1 to 1
-      const normalizedScore = (result.score + 1) / 2; // Converts -1 to 0 and 1 to 1
+      const normalizedScore = (result.score + 1) / 2; 
 
       // Convert to percentage
       const percentageScore = normalizedScore * 100;
 
       // Return the sentiment analysis result
       res.status(200).json({
-        score: percentageScore, // Now it's in percentage
+        score: percentageScore, 
         comparative: result.comparative,
         numWords: result.numWords,
         sentimentType: sentimentType, // Positive, Negative, or Neutral

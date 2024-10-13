@@ -5,7 +5,7 @@ const Summarize = () => {
 
   return (
     <div>
-      <p className='text-sm'>{summarizedText}</p>
+      <p className=''>{summarizedText}</p>
     </div>
   );
 };

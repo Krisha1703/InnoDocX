@@ -16,17 +16,17 @@ const PieChart = () => {
 
   // Create a map to aggregate counts by category
   const categoryCounts = posDataArray.reduce((acc, item) => {
-    const category = posLabelMapping[item.pos] || 'Other'; // Map using the label mapping or fallback to 'Other'
-    acc[category] = (acc[category] || 0) + item.count; // Aggregate counts for each category
+    const category = posLabelMapping[item.pos] || 'Other'; 
+    acc[category] = (acc[category] || 0) + item.count; 
     return acc;
   }, {});
 
   // Prepare the data for the pie chart
   const data = {
-    labels: Object.keys(categoryCounts), // Human-readable category labels
+    labels: Object.keys(categoryCounts), 
     datasets: [
       {
-        data: Object.values(categoryCounts), // Corresponding counts for each category
+        data: Object.values(categoryCounts), 
         backgroundColor: [
           '#FF6384',
           '#36A2EB',
@@ -51,11 +51,11 @@ const PieChart = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'right',
+        position: 'bottom',
         labels: {
-            boxWidth: 10, // Makes the legend boxes smaller (squared)
-            usePointStyle: true, // Enables custom point style (e.g., square)
-            pointStyle: 'rect', // Makes the points square-shaped
+            boxWidth: 20, 
+            usePointStyle: true, 
+            pointStyle: 'rect', 
           },
       },
       tooltip: {
@@ -74,7 +74,7 @@ const PieChart = () => {
     console.log("POS Data Array in Pie Chart: ", posDataArray);
   }, [posDataArray]);
 
-  return <Pie data={data} options={options} className='xl:-mt-5'/>;
+  return <Pie data={data} options={options} className='xl:mt-5'/>;
 };
 
 export default PieChart;

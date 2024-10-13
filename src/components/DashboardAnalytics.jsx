@@ -1,71 +1,90 @@
-import { Modal, Box, Typography, Button } from "@mui/material"
+import { Modal, Box, Typography, Button } from "@mui/material";
 import { useContext } from "react";
 import { wordCount, sentenceCount, uniqueCount, averageReadingTime } from './WordCount';
 import ThemeContext from "./ThemeContext";
-import BarChart from "./BarChart"
+import BarChart from "./BarChart";
 import PieChart from "./PieChart";
-import SentimentAnalyzer from "./SentimentAnalyzer"
-import Summarize from "./Summarize"
+import SentimentAnalyzer from "./SentimentAnalyzer";
+import Summarize from "./Summarize";
 
 const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+    const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
 
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '90vw',
-    boxShadow: 24,
-    p: 4,
-  };
-  
-  return (
-    <Modal open={modalOpen} onClose={handleModalClose}>
-    <Box sx={style} className={`${isDarkMode ? 'bg-black text-white' : 'bg-background.paper'}`}>
-      <Typography variant="h6" component="h2">
-        Analytics Dashboard
-      </Typography>
-      <div className="grid grid-cols-4 gap-10 p-4 ">
-        <div className="card">
-          <Typography>Total Words</Typography>
-          <Typography>{wordCount}</Typography>
-        </div>
-        <div className="card">
-          <Typography>Unique Words</Typography>
-          <Typography>{uniqueCount}</Typography>
-        </div>
-        <div className="card">
-          <Typography>Total Sentences</Typography>
-          <Typography>{sentenceCount}</Typography>
-        </div>
-        <div className="card">
-          <Typography>Average Time to Read</Typography>
-          <Typography>{averageReadingTime}</Typography>
-        </div>
-        <div className="card">
-          <Typography>Bar Chart</Typography>
-          <BarChart />
-        </div>
-        <div className="card">
-          <Typography>POS Tagging</Typography>
-          <PieChart />
-        </div>
-        <div className="card">
-          <Typography>Summarized Text</Typography>
-          <Summarize />
-        </div>
-        <div className="card">
-          <Typography>Text Sentiment</Typography>
-          <SentimentAnalyzer />
-        </div>
-      </div>
-      <Button variant="contained" onClick={handleModalClose} sx={{marginTop: "2vw"}} >
-        Close
-      </Button>
-    </Box>
-  </Modal>
-  )
-}
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '90vw',
+        maxHeight: '90vh', 
+        overflowY: 'auto', 
+        boxShadow: 24,
+        p: 4,
+    };
 
-export default DashboardAnalytics
+    return (
+      <Modal open={modalOpen} onClose={handleModalClose}>
+          <Box sx={style} className={`${isDarkMode ? 'bg-black text-white' : 'bg-white'}`}>
+              {/*Header*/}
+              <div className="flex justify-between">
+                <Typography variant="h6" component="h2">Analytics Dashboard</Typography>
+                <Button variant="contained" onClick={handleModalClose} sx={{ marginTop: "0vw" }}>Close</Button>
+              </div>
+              
+              {/*Dashboard layout*/}
+              <div className="grid grid-cols-4 gap-5 p-4 my-4">
+                  {/*Total words*/}
+                  <div className={`card pb-10 p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                      <Typography>Total Words</Typography>
+                      <Typography sx={{ fontSize: "3.5rem", marginTop: "2vw" }} className="text-center font-semibold text-blue-500">{wordCount}</Typography>
+                  </div>
+
+                  {/*Unique words*/}
+                  <div className={`card pb-10 p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                      <Typography>Unique Words</Typography>
+                      <Typography sx={{ fontSize: "3.5rem", marginTop: "2vw" }} className="text-center font-semibold text-blue-500">{uniqueCount}</Typography>
+                  </div>
+
+                  {/*Total sentences*/}
+                  <div className={`card pb-10 p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                      <Typography>Total Sentences</Typography>
+                      <Typography sx={{ fontSize: "3.5rem", marginTop: "2vw" }} className="text-center font-semibold text-blue-500">{sentenceCount}</Typography>
+                  </div>
+
+                  {/*Average reading time (250 words/min)*/}
+                  <div className={`card pb-10 p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                      <Typography>Average Time to Read(sec)</Typography>
+                      <Typography sx={{ fontSize: "3.5rem", marginTop: "2vw" }} className="text-center font-semibold text-blue-500">{averageReadingTime}</Typography>
+                  </div>
+
+                  {/* Bar Chart for word frequency */}
+                  <div className={`col-span-2 card p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                      <Typography>Word Frequency</Typography>
+                      <BarChart />
+                  </div>
+
+                  {/* Pie Chart for Part-of-Speech Tagging */}
+                  <div className={`card pb-10 p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                      <Typography>POS Tagging</Typography>
+                      <PieChart />
+                  </div>
+                
+                  {/* Text Sentiment Analysis */}
+                  <div className={`card pb-10 p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                      <Typography>Text Sentiment</Typography>
+                      <SentimentAnalyzer />
+                  </div>
+              </div>
+
+              {/* Summarized Text */}
+              <div className={`card pb-10 p-8 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                  <Typography sx={{ marginBottom: "2vw" }}>Summarized Text</Typography>
+                  <Summarize />
+              </div>
+      
+          </Box>
+      </Modal>
+    );
+};
+
+export default DashboardAnalytics;

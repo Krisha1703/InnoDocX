@@ -8,14 +8,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useDocumentOnce } from "react-firebase-hooks/firestore";
 import {useSummary} from 'use-react-summary';
-import {
-  setWordCount,
-  setSentenceCount,
-  setCharacterCount,
-  setUniqueCount,
-  setAverageReadingTime,
-  averageReadingTime,
-} from "./WordCount";
+import { setWordCount, setSentenceCount, setCharacterCount, setUniqueCount, setAverageReadingTime, averageReadingTime } from "./WordCount";
 import DeveloperConsole from "./DeveloperConsole";
 import FindAndReplaceModal from "./FindAndReplaceModal";
 import ThemeContext from "@/components/ThemeContext";
@@ -27,20 +20,20 @@ const Editor = dynamic(() =>
 );
 
 // Exported array for word frequencies
-let wordFrequencyArray = []; // Initialize the word frequency array
+let wordFrequencyArray = []; 
 
 export const useWordFrequencyArray = () => {
   return wordFrequencyArray; // Custom hook to access word frequency array
 };
 
 // Exported array for POS data
-let posDataArray = []; // Initialize the POS data array
+let posDataArray = []; 
 
 export const usePosDataArray = () => {
   return posDataArray; // Custom hook to access POS data array
 };
 
-// Create an object to hold the sentiment values
+// Object to hold the sentiment values
 export const sentimentData = {
   sentimentCategory: "",
   sentimentScore: 0,
@@ -52,7 +45,7 @@ export const updateSentiment = (category, score) => {
   sentimentData.sentimentScore = score;
 };
 
-// summarizedTextExport.js
+//Exporting text summary
 let summarizedText = "";
 // Function to update the summarized text
 export const setSummarizedText = (text) => {
@@ -87,33 +80,14 @@ export default function TextEditor(props) {
   const [averageReadingTimeState, setAverageReadingTimeState] = useState(0);
 
 
-  const plainText = editorState.getCurrentContent().getPlainText(); // Get the plain text from the editor
-  // Use the summarization hook
-  const { summarizeText, isLoading, error } = useSummary({ text: plainText, words: 50 }); // Updated to get the summarize function
+  const plainText = editorState.getCurrentContent().getPlainText();
+  const { summarizeText } = useSummary({ text: plainText, words: 50 });
 
   useEffect(() => {
     if (summarizeText) {
-      setSummarizedText(summarizeText); // Save the summary when it is available
+      setSummarizedText(summarizeText);
     }
   }, [summarizeText]);
-  
-  const handleSentiment = async (currentText) => {
-    try {
-      const responseSentiment = await fetch('/api/sentiment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input: currentText }),
-      });
-  
-      const sentimentData = await responseSentiment.json();
-      const { score, sentimentType } = sentimentData;
-      // Update the sentiment object
-      updateSentiment(sentimentType, score);
-    } catch (error) {
-      console.error('Error fetching sentiment data:', error);
-    }
-  };
-  
 
   useEffect(() => {
     if (snapshot?.data()?.editorState) {
@@ -124,28 +98,46 @@ export default function TextEditor(props) {
       );
     }
   }, [snapshot]);
+  
+  //Handling Sentiment Analyzing API
+  const handleSentiment = async (currentText) => {
+    try {
+      const responseSentiment = await fetch('/api/sentiment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input: currentText }),
+      });
+  
+      const sentimentData = await responseSentiment.json();
+      const { score, sentimentType } = sentimentData;
+      updateSentiment(sentimentType, score);
 
+    } catch (error) {
+      console.error('Error fetching sentiment data:', error);
+    }
+  };
+  
 
   const onEditorStateChange = async (editorState) => {
     setEditorState(editorState);
-     // Update the summarized text
-     const summary = summarizeText // Call the summarization function directly
-     setSummarizedText(summary); // Save the summary to the exportable variable
-    
 
-     // Call Sentiment Analysis API
+    //Summarizing text
+    const summary = summarizeText 
+    setSummarizedText(summary); 
+    
     handleSentiment(plainText); // Trigger sentiment analysis
 
-    // Calculate word count and sentences count
+    // Calculate sentences count
     const sentences = plainText.split(/[.!?]+/).filter((sentence) => sentence.trim().length > 0);
     setSentenceCountState(sentences.length);
     setSentenceCount(sentences.length);
 
+    // Calculate characters count
     const charCount = plainText.length;
     setCharacterCountState(charCount);
     setCharacterCount(charCount);
 
-    // Fetch tokens from API for word count
+    //Handling Text Preprocessing API - Tokenization, Stopwords Removal, and Filtering
     const response = await fetch('/api/preprocess', {
       method: 'POST',
       headers: {
@@ -154,43 +146,10 @@ export default function TextEditor(props) {
       body: JSON.stringify({ text: plainText }),
     });
 
-    const responsePOS = await fetch('/api/pos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: plainText }),
-    });
-
-    if (responsePOS.ok) {
-      try {
-        console.log("POS Tagging fetched successfully!");
-        const posData = await responsePOS.json();
-        console.log('Received POS Data:', posData);
-
-        // Convert the count object to an array of objects
-        posDataArray = Object.entries(posData).map(([pos, count]) => ({
-          pos,
-          count,
-        }));
-
-        console.log('POS Data Array:', posDataArray);
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
-      }
-    } else {
-      console.error('Fetch error:', responsePOS.status, responsePOS.statusText);
-    }
-
     if (response.ok) {
       try {
-        console.log("Word fetched successfully!");
         const data = await response.json();
         const { tokens, wordCount, uniqueWordCount } = data;
-
-        console.log('Tokenized Words:', tokens);
-        console.log('Word Count:', wordCount);
-        console.log('Unique Word Count:', uniqueWordCount);
 
         setWordCountState(wordCount);
         setWordCount(wordCount);
@@ -214,13 +173,37 @@ export default function TextEditor(props) {
           .sort((a, b) => b.frequency - a.frequency) // Sort by frequency descending
           .slice(0, 10); // Get the top 10 entries
 
-        console.log('Word Frequency Array:', wordFrequencyArray);
+      } catch (error) {
+          console.error('Error parsing JSON:', error);
+        }
+    } else {
+      console.error('Fetch error:', response.status, response.statusText);
+    }
+
+    //Handling Part-of-Speech Tagging API - Noun, Pronoun, Adjective, Verb, and more
+    const responsePOS = await fetch('/api/pos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text: plainText }),
+    });
+
+    if (responsePOS.ok) {
+      try {
+        const posData = await responsePOS.json();
+
+        // Convert the count object to an array of objects
+        posDataArray = Object.entries(posData).map(([pos, count]) => ({
+          pos,
+          count,
+        }));
 
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }
     } else {
-      console.error('Fetch error:', response.status, response.statusText);
+      console.error('Fetch error:', responsePOS.status, responsePOS.statusText);
     }
 
     // Save editor state to Firestore

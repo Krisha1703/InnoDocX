@@ -1,5 +1,5 @@
 import React from "react";
-import { sentimentData } from "./TextEditor"; // Ensure this path is correct
+import { sentimentData } from "./TextEditor"; 
 import GaugeChart from "react-gauge-chart";
 import { SentimentSatisfied, SentimentNeutral, SentimentDissatisfied } from "@mui/icons-material";
 
@@ -7,7 +7,7 @@ const SentimentAnalyzer = () => {
   const { sentimentCategory, sentimentScore } = sentimentData;
 
   // Use the sentiment score directly as a percentage
-  const percentageScore = Math.max(0, Math.min(sentimentScore ?? 0, 100)) / 100; // Convert to a 0-1 scale for the gauge chart
+  const percentageScore = Math.max(0, Math.min(sentimentScore ?? 0, 100)) / 100; 
 
   // Determine the color and icon based on sentimentCategory
   const getSentimentInfo = (category) => {
@@ -45,15 +45,13 @@ const SentimentAnalyzer = () => {
           nrOfLevels={3} // Number of color segments
           colors={["#FF0000", "#FFA500", "#00FF00"]} // Red, Orange, Green colors
           arcWidth={0.3} // Width of the gauge arc
-          percent={percentageScore} // Use the percentage score for the gauge
-          style={{ width: "200px", height: "100px" }} // Adjust size as needed
+          percent={percentageScore} 
+          style={{ width: "200px", height: "100px" }} 
         />
-        {/* Displaying the percentage score without 'out of 5' */}
-        
-        <h1 className="text-md">
-          <strong>{sentimentCategory}</strong>
-        </h1>
+
+        <h1 className="text-md"><strong>{sentimentCategory}</strong></h1>
         <div className="mt-2">{getSentimentInfo(sentimentCategory).icon}</div>
+        
       </div>
     </div>
   );

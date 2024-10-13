@@ -62,7 +62,7 @@ const BarChart = () => {
                     maxRotation: 90, 
                     minRotation: 45, 
                     font: {
-                        size: 10, 
+                        size: 12, 
                     },
                 },
             },
