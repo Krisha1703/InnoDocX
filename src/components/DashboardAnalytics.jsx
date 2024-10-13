@@ -4,6 +4,7 @@ import { wordCount, sentenceCount, uniqueCount, averageReadingTime } from './Wor
 import ThemeContext from "./ThemeContext";
 import BarChart from "./BarChart"
 import PieChart from "./PieChart";
+import SentimentAnalyzer from "./SentimentAnalyzer"
 
 const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
   const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
@@ -54,6 +55,7 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
         </div>
         <div className="card">
           <Typography>Text Sentiment</Typography>
+          <SentimentAnalyzer />
         </div>
       </div>
       <Button variant="contained" onClick={handleModalClose} sx={{marginTop: "2vw"}} >

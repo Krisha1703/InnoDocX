@@ -31,6 +31,7 @@
     "react-dom": "^18",
     "react-draft-wysiwyg": "^1.15.0",
     "react-firebase-hooks": "^5.1.1",
+    "react-gauge-chart": "^0.5.1",
     "react-toastify": "^10.0.5",
     "stopword": "^3.1.1",
     "three": "^0.168.0"

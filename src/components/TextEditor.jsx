@@ -39,6 +39,18 @@ export const usePosDataArray = () => {
   return posDataArray; // Custom hook to access POS data array
 };
 
+// Create an object to hold the sentiment values
+export const sentimentData = {
+  sentimentCategory: "",
+  sentimentScore: 0,
+};
+
+// Function to update the sentiment values
+export const updateSentiment = (category, score) => {
+  sentimentData.sentimentCategory = category;
+  sentimentData.sentimentScore = score;
+};
+
 export default function TextEditor(props) {
   const router = useRouter();
   const id = props.id;
@@ -60,6 +72,26 @@ export default function TextEditor(props) {
   const [uniqueCountState, setUniqueCountState] = useState(0);
   const [averageReadingTimeState, setAverageReadingTimeState] = useState(0);
 
+
+  
+  const handleSentiment = async (currentText) => {
+    try {
+      const responseSentiment = await fetch('/api/sentiment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input: currentText }),
+      });
+  
+      const sentimentData = await responseSentiment.json();
+      const { score, sentimentType } = sentimentData;
+      // Update the sentiment object
+      updateSentiment(sentimentType, score);
+    } catch (error) {
+      console.error('Error fetching sentiment data:', error);
+    }
+  };
+  
+
   useEffect(() => {
     if (snapshot?.data()?.editorState) {
       setEditorState(
@@ -70,9 +102,14 @@ export default function TextEditor(props) {
     }
   }, [snapshot]);
 
+
+
   const onEditorStateChange = async (editorState) => {
     setEditorState(editorState);
     const plainText = editorState.getCurrentContent().getPlainText();
+
+     // Call Sentiment Analysis API
+    handleSentiment(plainText); // Trigger sentiment analysis
 
     // Calculate word count and sentences count
     const sentences = plainText.split(/[.!?]+/).filter((sentence) => sentence.trim().length > 0);
