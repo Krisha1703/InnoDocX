@@ -3,9 +3,6 @@
     "languages": [
       "en"
     ],
-    "nlu": {
-      "log": false
-    },
     "tag": "nlp",
     "threshold": 0.5,
     "autoLoad": true,
@@ -16,8 +13,7 @@
   },
   "nluManager": {
     "settings": {
-      "tag": "nlu-manager",
-      "log": false
+      "tag": "nlu-manager"
     },
     "locales": [
       "en"
@@ -66,7 +62,8 @@
                 "nonedeltaMultiplier": 1.2,
                 "spellCheck": false,
                 "spellCheckDistance": 1,
-                "filterZeros": true
+                "filterZeros": true,
+                "log": true
               }
             }
           }
@@ -82,7 +79,88 @@
       "entityPreffix": "%",
       "entitySuffix": "%"
     },
-    "rules": {}
+    "rules": {
+      "en": {
+        "organization": {
+          "name": "organization",
+          "type": "enum",
+          "rules": [
+            {
+              "option": "organization",
+              "texts": [
+                "Apple",
+                "Google",
+                "OpenAI"
+              ]
+            }
+          ]
+        },
+        "location": {
+          "name": "location",
+          "type": "enum",
+          "rules": [
+            {
+              "option": "location",
+              "texts": [
+                "California",
+                "New York",
+                "London"
+              ]
+            }
+          ]
+        },
+        "person": {
+          "name": "person",
+          "type": "enum",
+          "rules": [
+            {
+              "option": "person",
+              "texts": [
+                "John Doe",
+                "Jane Smith"
+              ]
+            }
+          ]
+        },
+        "date": {
+          "name": "date",
+          "type": "enum",
+          "rules": [
+            {
+              "option": "date",
+              "texts": [
+                "January 1, 2024",
+                "February 14, 2024"
+              ]
+            }
+          ]
+        },
+        "email": {
+          "name": "email",
+          "type": "enum",
+          "rules": [
+            {
+              "option": "email",
+              "texts": [
+                "example@gmail.com"
+              ]
+            }
+          ]
+        },
+        "url": {
+          "name": "url",
+          "type": "enum",
+          "rules": [
+            {
+              "option": "url",
+              "texts": [
+                "https://www.example.com"
+              ]
+            }
+          ]
+        }
+      }
+    }
   },
   "nlgManager": {
     "settings": {

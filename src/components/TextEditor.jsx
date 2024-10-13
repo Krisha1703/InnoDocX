@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { useSession } from "next-auth/react";
 import { useDocumentOnce } from "react-firebase-hooks/firestore";
+import {useSummary} from 'use-react-summary';
 import {
   setWordCount,
   setSentenceCount,
@@ -51,6 +52,19 @@ export const updateSentiment = (category, score) => {
   sentimentData.sentimentScore = score;
 };
 
+// summarizedTextExport.js
+let summarizedText = "";
+// Function to update the summarized text
+export const setSummarizedText = (text) => {
+  summarizedText = text;
+};
+
+// Function to get the summarized text
+export const getSummarizedText = () => {
+  return summarizedText;
+};
+
+
 export default function TextEditor(props) {
   const router = useRouter();
   const id = props.id;
@@ -73,6 +87,15 @@ export default function TextEditor(props) {
   const [averageReadingTimeState, setAverageReadingTimeState] = useState(0);
 
 
+  const plainText = editorState.getCurrentContent().getPlainText(); // Get the plain text from the editor
+  // Use the summarization hook
+  const { summarizeText, isLoading, error } = useSummary({ text: plainText, words: 50 }); // Updated to get the summarize function
+
+  useEffect(() => {
+    if (summarizeText) {
+      setSummarizedText(summarizeText); // Save the summary when it is available
+    }
+  }, [summarizeText]);
   
   const handleSentiment = async (currentText) => {
     try {
@@ -103,10 +126,12 @@ export default function TextEditor(props) {
   }, [snapshot]);
 
 
-
   const onEditorStateChange = async (editorState) => {
     setEditorState(editorState);
-    const plainText = editorState.getCurrentContent().getPlainText();
+     // Update the summarized text
+     const summary = summarizeText // Call the summarization function directly
+     setSummarizedText(summary); // Save the summary to the exportable variable
+    
 
      // Call Sentiment Analysis API
     handleSentiment(plainText); // Trigger sentiment analysis

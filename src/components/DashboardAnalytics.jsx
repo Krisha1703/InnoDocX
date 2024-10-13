@@ -5,6 +5,7 @@ import ThemeContext from "./ThemeContext";
 import BarChart from "./BarChart"
 import PieChart from "./PieChart";
 import SentimentAnalyzer from "./SentimentAnalyzer"
+import Summarize from "./Summarize"
 
 const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
   const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
@@ -51,7 +52,8 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
           <PieChart />
         </div>
         <div className="card">
-          <Typography>NER</Typography>
+          <Typography>Summarized Text</Typography>
+          <Summarize />
         </div>
         <div className="card">
           <Typography>Text Sentiment</Typography>
