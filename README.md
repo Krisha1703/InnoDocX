@@ -2,7 +2,7 @@
 
 ## Overview
 
-**InnoDoc** is a full-featured document management application with advanced developer tools, voice-enabled interactions, and rich text analytics. Users can create, manage, and edit documents effortlessly while leveraging user authentication, developer mode with terminal commands, voice-assisted document creation, and more.
+**InnoDoc** is a full-featured document management application inspired by Google Docs with advanced developer tools, voice-enabled interactions, and rich text analytics. Users can create, manage, and edit documents effortlessly while leveraging user authentication, developer mode with terminal commands, voice-assisted document creation, and more.
 
 ## Features
 
@@ -75,10 +75,10 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/DocuFlow.git
+   https://github.com/Krisha1703/google-docs-clone.git
 2. Navigate to the project directory:
     ```bash
-    cd DocuFlow
+    cd InnoDoc
 3. Install the dependencies:
     ```bash
     npm install
