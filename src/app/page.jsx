@@ -1,16 +1,23 @@
 "use client";
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
+//Firebase
+import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../components/firebase'; 
-import Header from "../components/Header";
-import CreateDoc from "../components/CreateDoc";
-import Login from "../components/Login";
+
+//React Hooks
 import { useEffect } from 'react';
 import { useSession } from "next-auth/react";
-import { ThemeProvider } from '../components/ThemeContext';
+
+//UI Components
+import { ThemeProvider } from '../components/Developer Mode/ThemeContext';
+import Header from "../components/Home/Header/Header";
+import Hero from "../components/Home/Hero/Hero";
+import Login from "../components/Login";
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session } = useSession(); //User session data
 
+  //Store the authenticated user's details in Firebase Firestore when a user session is active
   const storeUserInFirebase = async () => {
     if (session) {
       try {
@@ -26,24 +33,22 @@ export default function Home() {
     }
   };
 
+  //If session active then store user information in firebase
   useEffect(() => {
     if (session) {
       storeUserInFirebase();
     }
   }, [session]);
 
+  //If there is no active session, then render Login component
   if (!session) {
     return <Login />;
   }
 
   return (
     <ThemeProvider>
-    <main className="">
-      
       <Header />
-      <CreateDoc />
- 
-    </main>
+      <Hero />
     </ThemeProvider>
   );
 }

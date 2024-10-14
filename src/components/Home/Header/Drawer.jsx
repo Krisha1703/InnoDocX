@@ -2,11 +2,11 @@ import { Drawer as MuiDrawer, Typography } from "@mui/material";
 import Image from "next/image";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import { useState, useContext } from "react";
-import ThemeContext from './ThemeContext'; // Import your ThemeContext
+import { useContext } from "react";
+import ThemeContext from '@/components/Developer Mode/ThemeContext'; 
 
 const SidebarDrawer = ({ open, handleDrawerClose }) => {
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext); 
 
   return (
     <MuiDrawer
@@ -18,8 +18,8 @@ const SidebarDrawer = ({ open, handleDrawerClose }) => {
       <div
         style={{
           width: 300,
-          backgroundColor: isDarkMode ? '#424242' : '#ffffff', // Set background color based on dark mode
-          color: isDarkMode ? '#ffffff' : '#000000', // Set text color based on dark mode
+          backgroundColor: isDarkMode ? '#424242' : '#ffffff', // background color based on dark mode
+          color: isDarkMode ? '#ffffff' : '#000000', // text color based on dark mode
         }}
         onMouseLeave={handleDrawerClose}
       >

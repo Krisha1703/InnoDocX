@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import ThemeContext from "@/components/ThemeContext";
+import ThemeContext from "@/components/Developer Mode/ThemeContext";
 
 const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCountClick, handle3DStatisticsClick, handleAnalyticsDashboard }) => {
   const [openMenu, setOpenMenu] = useState(null); // Track the open menu
@@ -8,9 +8,8 @@ const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCoun
     setOpenMenu(openMenu === menu ? null : menu); // Toggle the clicked menu
   };
 
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext); 
   
-
   return (
     <div className={`flex items-center text-sm space-x-2 h-8  `}>
       

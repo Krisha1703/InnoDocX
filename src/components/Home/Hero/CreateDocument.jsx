@@ -1,14 +1,14 @@
 import { Modal, Box, Typography, TextField, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import { doc, collection, setDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from './firebase'; // Import Firebase instance
-import useAppState from './useAppState';
+import { db } from '../../firebase'; 
+import useAppState from '../../useAppState';
 import VoiceCreate from './VoiceCreate';
 import { useContext, useEffect, useState } from 'react';
-import  ThemeContext  from './ThemeContext'; // Import your ThemeContext
+import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
 
 const CreateDocument = ({ showModal, setShowModal }) => {
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext); 
   const [docName, setDocName] = useState('');
   
   const {

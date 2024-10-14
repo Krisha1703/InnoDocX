@@ -2,14 +2,14 @@ import { useState, useContext } from "react";
 import { Email, Cloud, CalendarToday, Map, YouTube, Description, Photo, VideoCall, Contacts } from '@mui/icons-material';
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
-import ThemeContext from './ThemeContext'; // Import your ThemeContext
+import ThemeContext from '../../Developer Mode/ThemeContext'; 
 
 const DotMenu = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
   
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext);
 
   const services = [
     { name: 'Gmail', icon: <Email /> },
@@ -39,14 +39,14 @@ const DotMenu = () => {
         onClose={handleClose}
         PaperProps={{
           style: {
-            backgroundColor: isDarkMode ? '#424242' : '#ffffff', // Set background color based on dark mode
-            color: isDarkMode ? '#ffffff' : '#000000', // Set text color based on dark mode
+            backgroundColor: isDarkMode ? '#424242' : '#ffffff', //background color based on dark mode
+            color: isDarkMode ? '#ffffff' : '#000000', // text color based on dark mode
           },
         }}
       >
         <div style={{ padding: 8, width: 200 }}>
           {services.map((service, index) => (
-            <MenuItem key={index} onClick={handleClose} style={{ color: isDarkMode ? '#ffffff' : '#000000' }}> {/* Set text color */}
+            <MenuItem key={index} onClick={handleClose} style={{ color: isDarkMode ? '#ffffff' : '#000000' }}> 
               {service.icon}
             </MenuItem>
           ))}

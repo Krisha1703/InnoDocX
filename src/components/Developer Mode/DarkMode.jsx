@@ -1,5 +1,5 @@
 import {  useContext } from "react";
-import ThemeContext from "@/components/ThemeContext";
+import ThemeContext from "@/components/Developer Mode/ThemeContext";
 
 const DarkMode = ({children}) => {
   const { isDarkMode } = useContext(ThemeContext); // Access dark mode value

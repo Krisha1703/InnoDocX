@@ -1,17 +1,17 @@
-import React, { useEffect, useState, useContext } from 'react'; // Import useContext
+import React, { useEffect, useState, useContext } from 'react';
 import { collection, getDocs } from "firebase/firestore";
 import { List, ListItem, ListItemText } from '@mui/material';
 import { useSession } from "next-auth/react";
-import { db } from "./firebase";
+import { db } from "../../firebase";
 import Link from 'next/link';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
-import ThemeContext from './ThemeContext'; // Import your ThemeContext
+import ThemeContext from '../../Developer Mode/ThemeContext'; 
 
 const DocumentsList = ({ searchQuery }) => {
   const { data: session } = useSession();
   const [documents, setDocuments] = useState([]);
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext); 
 
   useEffect(() => {
     const fetchDocuments = async () => {

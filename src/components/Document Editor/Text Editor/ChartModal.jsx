@@ -1,11 +1,14 @@
+//Displays statistics like word count, sentence count, and character count in 3D bar charts
+
 import { Modal, Box, Typography } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
 import ThreeDChart from "./3DCharts"
 import { useContext } from "react";
-import ThemeContext from "@/components/ThemeContext";
+import ThemeContext from "@/components/Developer Mode/ThemeContext";
 
 const ChartModal = ({ modalOpen, handleModalClose }) => {
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext); 
+
   return (
     <Modal
       open={modalOpen}
@@ -15,13 +18,10 @@ const ChartModal = ({ modalOpen, handleModalClose }) => {
     >
       <Box className={`absolute rounded-xl top-[20%] left-[35%] w-1/2 shadow-md p-4 pb-10 ${isDarkMode ? 'bg-black text-white' : 'bg-white'} flex flex-col items-center`}>
         <CloseIcon className="cursor-pointer absolute right-5 mt-0 mb-10" onClick={handleModalClose} />
-        <Typography variant="h6" className="my-10">
-          3D Statistics
-        </Typography>
-
+        <Typography variant="h6" className="my-10">3D Statistics </Typography>
         <ThreeDChart />
-        
       </Box>
+
     </Modal>
   )
 }

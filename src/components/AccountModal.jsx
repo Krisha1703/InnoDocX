@@ -1,13 +1,16 @@
+//MUI Components
 import { Modal, Box, Typography } from '@mui/material';
 import { Close as CloseIcon, AddCircle as AddCircleIcon, Logout as LogoutIcon } from '@mui/icons-material';
-import Image from 'next/image';
+
+//React Hooks and UI Components
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useContext } from 'react';
-import ThemeContext from './ThemeContext'; // Import your ThemeContext
+import Image from 'next/image';
+import ThemeContext from './Developer Mode/ThemeContext'; 
 
 const AccountModal = ({ modalOpen, handleModalClose }) => {
   const { data: session, status } = useSession();
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext); 
 
   // Ensure the modal doesn't break if the session is not loaded
   if (status === "loading") return null;
@@ -29,7 +32,7 @@ const AccountModal = ({ modalOpen, handleModalClose }) => {
         <CloseIcon 
           className='cursor-pointer absolute right-5 my-2' 
           onClick={handleModalClose} 
-          style={{ color: isDarkMode ? '#ffffff' : '#000000' }} // Icon color
+          style={{ color: isDarkMode ? '#ffffff' : '#000000' }} // Icon color based on dark mode
         />
         <Typography variant="h6" className='mt-10'>{isDarkMode ? <span style={{ color: '#ffffff' }}>Account Management</span> : 'Account Management'}</Typography>
 

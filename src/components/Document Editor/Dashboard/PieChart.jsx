@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Pie } from 'react-chartjs-2';
 import posLabelMapping from './POSCategories';
-import { usePosDataArray } from './TextEditor';
+import { usePosDataArray } from '../Text Editor/TextEditor';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -69,10 +69,6 @@ const PieChart = () => {
       },
     },
   };
-
-  useEffect(() => {
-    console.log("POS Data Array in Pie Chart: ", posDataArray);
-  }, [posDataArray]);
 
   return <Pie data={data} options={options} className='xl:mt-5'/>;
 };

@@ -1,14 +1,14 @@
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import { doc, setDoc, deleteDoc } from 'firebase/firestore';
-import { db } from './firebase'; // Import Firebase instance
+import { db } from '../../firebase'; 
 import { useState } from 'react';
-import useAppState from './useAppState';
+import useAppState from '../../useAppState';
 import { useContext } from 'react';
-import  ThemeContext  from './ThemeContext'; // Import your ThemeContext
+import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
 
 const EditDocument = ({ showOptionsModal, setShowOptionsModal, selectedDoc }) => {
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext); 
     const {
         session
     } = useAppState();

@@ -1,28 +1,35 @@
 "use client";
-import { useRouter } from "next/navigation";
+
+//Firebase
 import { db } from "../../../components/firebase";
 import { useDocumentOnce } from "react-firebase-hooks/firestore";
-import { useSession } from "next-auth/react";
-import Login from "@/components/Login";
 import { collection, doc, updateDoc } from "firebase/firestore";
-import AccountModal from "@/components/AccountModal";
+
+//React Hooks
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+
 import Image from "next/image";
-import { useState, useEffect, useContext } from "react";
-import { ThemeProvider } from "@/components/ThemeContext";
-import TextEditor from "../../../components/TextEditor";
-import ShareDoc from "../../../components/ShareDocument";
-import ChartModal from "../../../components/ChartModal";
-import DashboardAnalytics from "../../../components/DashboardAnalytics";
-import WordCountModal from "../../../components/WordCountModal";
-import ToolBarMenu from "../../../components/ToolbarMenu";
-import DeveloperModeButton from "@/components/DeveloperModeButton";
-import DarkMode from "../../../components/DarkMode"
+
+//UI Components
+import Login from "@/components/Login";
+import AccountModal from "@/components/AccountModal";
+import { ThemeProvider } from "@/components/Developer Mode/ThemeContext";
+import TextEditor from "@/components/Document Editor/Text Editor/TextEditor";
+import ShareDoc from "@/components/Document Editor/Text Editor/ShareDocument";
+import ChartModal from "@/components/Document Editor/Text Editor/ChartModal";
+import DashboardAnalytics from "@/components/Document Editor/Dashboard/DashboardAnalytics";
+import WordCountModal from "@/components/Document Editor/Text Editor/WordCountModal";
+import ToolBarMenu from "@/components/Document Editor/Text Editor/ToolbarMenu";
+import DeveloperModeButton from "@/components/Developer Mode/DeveloperModeButton";
+import DarkMode from "@/components/Developer Mode/DarkMode"
 
 
 export default function Page({ params }) {
   const { data: session } = useSession();
   const router = useRouter();
-  const id = params.id;
+  const id = params.id; //Retrieve document id from the url path
 
   const [snapshot, loading] = useDocumentOnce(
     session?.user?.email
@@ -219,7 +226,7 @@ export default function Page({ params }) {
         </div>
        
 
-        <ShareDoc id={id} /> {/* Sharing Document */}
+        <ShareDoc id={id} userEmail={session?.user?.email}/> {/* Sharing Document */}
 
         {/* User Profile Icon*/}
         <Image

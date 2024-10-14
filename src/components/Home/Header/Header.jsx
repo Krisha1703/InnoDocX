@@ -1,18 +1,26 @@
+//React Hooks
 import React, { useState, useContext } from 'react';
 import { useSession } from "next-auth/react";
-import DotMenu from "./DotMenu";
-import AccountModal from "./AccountModal";
-import SidebarDrawer from './Drawer';
-import { ToastContainer, toast } from 'react-toastify';
+
+//MUI Components
 import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import Image from 'next/image';
-import DeveloperModeButton from "./DeveloperModeButton"
-import { Search, SearchIconWrapper, StyledInputBase } from './Search';
 import MicIcon from '@mui/icons-material/Mic';
-import DocumentsList from './DocumentsList'; // Import the DocumentsList component
-import  ThemeContext  from './ThemeContext'; // Import your ThemeContext
+
+//UI Components
+import DotMenu from "./DotMenu";
+import AccountModal from "../../AccountModal";
+import SidebarDrawer from './Drawer';
+import DeveloperModeButton from "../../Developer Mode/DeveloperModeButton"
+import { Search, SearchIconWrapper, StyledInputBase } from './Search';
+import DocumentsList from './DocumentsList'; 
+import ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
+
+import { ToastContainer, toast } from 'react-toastify';
+import Image from 'next/image';
+
+
 
 // Voice Recognition Setup
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -20,7 +28,7 @@ const recognition = new SpeechRecognition();
 
 export default function HeaderNavbar() {
   const { data: session } = useSession();
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext); 
 
   const [state, setState] = useState({
     modalOpen: false,
@@ -30,7 +38,7 @@ export default function HeaderNavbar() {
     isListening: false,
   });
 
-  const { modalOpen, drawerOpen, focused, searchQuery, isListening } = state;
+  const { modalOpen, drawerOpen, searchQuery, isListening } = state;
 
   // Toggle Modal, Drawer, Focus
   const toggleState = (field) => setState((prevState) => ({ ...prevState, [field]: !prevState[field] }));
@@ -115,7 +123,7 @@ export default function HeaderNavbar() {
       </AppBar>
 
       {/* Document List */}
-      <DocumentsList searchQuery={searchQuery} /> {/* Pass searchQuery as prop */}
+      <DocumentsList searchQuery={searchQuery} /> 
 
       {/* Account Modal */}
       <AccountModal modalOpen={modalOpen} handleModalClose={() => toggleState('modalOpen')} />

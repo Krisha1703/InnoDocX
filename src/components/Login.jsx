@@ -1,8 +1,6 @@
 import { Button } from "@material-tailwind/react"
 import Image from "next/image"
 import { signIn } from "next-auth/react"
-import Avatar from '@mui/material/Avatar';
-import { deepPurple } from '@mui/material/colors';
 
 function Login() {
   return (

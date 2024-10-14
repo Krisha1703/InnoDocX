@@ -1,14 +1,14 @@
 import { Modal, Box, Typography, Button } from "@mui/material";
 import { useContext } from "react";
-import { wordCount, sentenceCount, uniqueCount, averageReadingTime } from './WordCount';
-import ThemeContext from "./ThemeContext";
+import { wordCount, sentenceCount, uniqueCount, averageReadingTime } from '../Text Editor/WordCount';
+import ThemeContext from "../../Developer Mode/ThemeContext";
 import BarChart from "./BarChart";
 import PieChart from "./PieChart";
 import SentimentAnalyzer from "./SentimentAnalyzer";
 import Summarize from "./Summarize";
 
 const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
-    const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+    const { isDarkMode } = useContext(ThemeContext); 
 
     const style = {
         position: 'absolute',
@@ -54,7 +54,7 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
                   {/*Average reading time (250 words/min)*/}
                   <div className={`card pb-10 p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
                       <Typography>Average Time to Read(sec)</Typography>
-                      <Typography sx={{ fontSize: "3.5rem", marginTop: "2vw" }} className="text-center font-semibold text-blue-500">{averageReadingTime}</Typography>
+                      <Typography sx={{ fontSize: "3.5rem", marginTop: "2vw" }} className="text-center font-semibold text-blue-500">{averageReadingTime.toFixed(2)}</Typography>
                   </div>
 
                   {/* Bar Chart for word frequency */}

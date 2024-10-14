@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { useWordFrequencyArray } from './TextEditor'; 
+import { useWordFrequencyArray } from '../Text Editor/TextEditor'; 
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -22,13 +22,8 @@ ChartJS.register(
 
 const BarChart = () => {
     const wordFrequencies = useWordFrequencyArray();
-
     const tokens = wordFrequencies.map(item => item.token);
     const frequencies = wordFrequencies.map(item => item.frequency);
-
-    useEffect(() => {
-        console.log("Word Frequency Array in Bar Chart: ", wordFrequencies);
-    }, [wordFrequencies]);
 
     const data = {
         labels: tokens,
@@ -42,7 +37,6 @@ const BarChart = () => {
             },
         ],
     };
-
 
     const options = {
         scales: {

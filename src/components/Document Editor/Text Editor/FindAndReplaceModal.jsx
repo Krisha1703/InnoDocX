@@ -1,11 +1,13 @@
+//React and MUI
 import React, { useState, useContext } from "react";
 import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ThemeContext from "@/components/Developer Mode/ThemeContext";
+
+//Firebase
 import { doc, setDoc, collection } from "firebase/firestore";
 import { convertToRaw, EditorState, ContentState } from "draft-js";
-import { db } from "./firebase"; // Adjust this import to match your project structure
-import ThemeContext from "@/components/ThemeContext";
-
+import { db } from "../../firebase"; 
 
 const findAndReplace = (text, findWord, replaceWord) => {
   const regex = new RegExp(findWord, "g");
@@ -32,7 +34,7 @@ const FindAndReplaceModal = ({ editorState, setEditorState, id, session }) => {
     setDoc(
       doc(collection(db, "userDocs", session?.user?.email, "docs"), id),
       {
-        editorState: convertToRaw(newContentState), // Save the raw content state
+        editorState: convertToRaw(newContentState), 
       },
       {
         merge: true,

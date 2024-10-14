@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CreateDocument from './CreateDocument';
-import useAppState from './useAppState';
+import useAppState from '../../useAppState';
 import { Button } from '@mui/material';
 
 const VoiceAssistant = () => {

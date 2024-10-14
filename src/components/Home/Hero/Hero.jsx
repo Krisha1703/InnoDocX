@@ -1,16 +1,15 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Image from 'next/image';
-import useAppState from './useAppState';
+import useAppState from '../../useAppState';
 import CreateDocument from "./CreateDocument"
-import ListDocuments from "./ListDocuments"
+import ListDocuments from "../List Documents/ListDocuments"
 import ScrollTrigger from "./ScrollTrigger"
 import { useContext } from 'react';
-import { useState } from 'react';
 import VoiceAssistant from "./VoiceAssisstant"
-import  ThemeContext  from './ThemeContext'; // Import your ThemeContext
+import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
 
 export default function CreateDoc() {
-  const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
+  const { isDarkMode } = useContext(ThemeContext);
 
   const {
     showModal,
@@ -18,7 +17,7 @@ export default function CreateDoc() {
   } = useAppState();
 
   return (
-    <section className=''>
+    <>
       <div className={`${isDarkMode ? 'bg-[#333]' : 'bg-[#F8F9FA]'} pb-10 px-10`}>
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between py-6">
@@ -41,10 +40,10 @@ export default function CreateDoc() {
               )}
               
               <p className="font-medium py-3 text-md">Blank document</p>
-             {/* <VoiceAssistant /> */}
+              <VoiceAssistant /> 
             </div>
 
-            <div className="flex-grow mx-4"> {/* Add a wrapper with flex-grow to make space for ScrollTrigger */}
+            <div className="flex-grow mx-4"> 
               <ScrollTrigger />
             </div>
 
@@ -56,6 +55,6 @@ export default function CreateDoc() {
 
       <ListDocuments />
 
-    </section>
+    </>
   );
 }
