@@ -20,13 +20,11 @@ const VoiceAssistant = () => {
     recognition.interimResults = false;
 
     recognition.onstart = () => {
-      console.log('Voice recognition activated. Speak now.');
       setIsListening(true);
     };
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript.toLowerCase();
-      console.log('You said:', transcript); // Debugging log
 
       // Check if the user said "create a new document"
       if (
@@ -36,7 +34,6 @@ const VoiceAssistant = () => {
         transcript.includes('want to create')
       )
       {
-        console.log('Creating document...'); // Debugging log
         setShowModal(true);
         speak('Creating a new document for you.');
       } else {
@@ -45,7 +42,6 @@ const VoiceAssistant = () => {
     };
 
     recognition.onend = () => {
-      console.log('Voice recognition stopped.');
       setIsListening(false);
     };
 
@@ -59,13 +55,8 @@ const VoiceAssistant = () => {
   useEffect(() => {
     // Activate voice assistant when component mounts
     speak(`Hello, ${session?.user?.name}, I will be assisting you today.`);
-
     // Start listening when the user clicks the button
     startListening();
-
-    return () => {
-      // Optionally, handle cleanup here if necessary
-    };
   }, [session]); // Re-run the effect if the session changes
 
   return (
