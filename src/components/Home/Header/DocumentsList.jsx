@@ -39,13 +39,13 @@ const DocumentsList = ({ searchQuery }) => {
   return (
     <>
       {searchQuery && (
-        <List className='max-w-3xl'>
-          <ListItemText primary="Search query results: " className='mx-20 my-5' />
+        <List className='md:max-w-2xl lg:max-w-3xl max-w-sm overflow-hidden'>
+          <ListItemText primary="Search query results: " className='lg:mx-20 md:mx-5 mx-5 my-5' />
           {documents.length > 0 ? (
             documents.map(doc => (
               <Link href={`/doc/${doc.id}`} passHref key={doc.id}>
                 <ListItem 
-                  className={`mx-40 ${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-white hover:bg-[#E8F0FE]'} p-4 shadow-md cursor-pointer`}
+                  className={`lg:mx-40 md:mx-10 mx-1 ${isDarkMode ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-white hover:bg-[#E8F0FE]'} p-4 shadow-md cursor-pointer`}
                 >
                   <Image src="/docs.png" width={20} height={20} alt="docs" className='mx-5' />
                   <ListItemText primary={doc.fileName} />

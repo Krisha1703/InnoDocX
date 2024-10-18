@@ -312,7 +312,7 @@ export default function TextEditor(props) {
       <Editor
         editorState={editorState}
         onEditorStateChange={onEditorStateChange}
-        toolbarClassName={`custom-toolbar z-10 sticky top-0 !justify-center mx-5 px-4 py-2 !rounded-full ${isDarkMode ? '!bg-black' : '!bg-[#E8F0FE]'} `}
+        toolbarClassName={`custom-toolbar z-10 sticky top-0 !justify-center mx-5 px-4 py-2 !md:rounded-full !rounded-md ${isDarkMode ? '!bg-black' : '!bg-[#E8F0FE]'} `}
         editorClassName={`custom-editor p-10 shadow-lg w-11/12 max-w-full mx-auto mb-2 border !max-h-[70vh] !overflow-y relative`}
         toolbar={{
           options: [

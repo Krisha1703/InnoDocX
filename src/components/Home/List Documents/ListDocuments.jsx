@@ -184,13 +184,13 @@ const ListDocuments = () => {
     };
 
   return (
-    <div className="ml-[10vw] p-8">
+    <div className="lg:ml-[10vw] md:ml-[5vw] p-8">
         <ToastContainer />
         {/* Header */}
         <div className="grid grid-cols-5 gap-4 w-full px-4 mb-4">
-          <p className="font-medium cursor-pointer"  onClick={() => handleSortClick('fileName')}>My Documents</p>
+          <p className="font-medium cursor-pointer md:mr-0 mr-5"  onClick={() => handleSortClick('fileName')}>My Documents</p>
           <div className='flex'>
-            <p className="font-medium cursor-pointer" onClick={() => fetchDocuments('Category', 'asc')}>Category</p>
+            <p className="font-medium cursor-pointer lg:ml-0 md:md:ml-10 md:block hidden" onClick={() => fetchDocuments('Category', 'asc')}>Category</p>
             <Button
               onClick={handleCategoryClick}
               endIcon={<ArrowDropDown />}
@@ -212,9 +212,9 @@ const ListDocuments = () => {
             ))}
           </Menu>
 
-          <p className="font-medium cursor-pointer" onClick={() => handleSortClick('createdAt')}>Date Created</p>
-          <p className="font-medium cursor-pointer" onClick={() => handleSortClick('updatedAt')}>Last Opened</p>
-          <p className="font-medium cursor-pointer"><Folder /></p>
+          <p className="font-medium cursor-pointer lg:ml-0 md:ml-10 md:block hidden" onClick={() => handleSortClick('createdAt')}>Date Created</p>
+          <p className="font-medium cursor-pointer text-nowrap lg:ml-0 md:ml-20 md:block hidden" onClick={() => handleSortClick('updatedAt')}>Last Opened</p>
+          <p className="font-medium cursor-pointer lg:ml-0 md:ml-[11vw] ml-[35vw]"><Folder /></p>
         </div>
 
         {/* Document Rows */}
@@ -224,7 +224,7 @@ const ListDocuments = () => {
               key={doc.id}
               onMouseEnter={() => handleMouseEnter(doc)}
               onMouseLeave={handleMouseLeave}
-              className={`grid grid-cols-5 gap-4 w-10/12 p-4 py-2 rounded-full 
+              className={`grid grid-cols-5 gap-4 lg:w-10/12 w-full p-4 py-2 lg:rounded-full rounded-md
                 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-[#E8F0FE]'} 
                 cursor-pointer`}
               onClick={() => updateDocumentTimestamp(doc.id)}
@@ -236,11 +236,11 @@ const ListDocuments = () => {
                 </div>
               </Link>
 
-              <p className="text-md ml-10 text-nowrap">{doc.Category}</p>
+              <p className="text-md ml-10 text-nowrap md:block hidden">{doc.Category}</p>
               
-              <p className="text-md  ml-[6vw] text-nowrap">{formatDate(doc.createdAt?.toDate())}</p>
-              <p className="text-md  ml-[8.5vw] text-nowrap">{formatDate(doc.updatedAt?.toDate())}</p>
-              <MoreVertIcon onClick={() => handleOptionsClick(doc)} className="ml-[11vw]"/>
+              <p className="text-md  ml-[6vw] text-nowrap md:block hidden">{formatDate(doc.createdAt?.toDate())}</p>
+              <p className="text-md  ml-[8.5vw] text-nowrap md:block hidden">{formatDate(doc.updatedAt?.toDate())}</p>
+              <MoreVertIcon onClick={() => handleOptionsClick(doc)} className="md:ml-[11vw] ml-[50vw]"/>
             </div>
           ))}
         </div>
@@ -250,7 +250,7 @@ const ListDocuments = () => {
         )}
 
         {hoveredDocId && (
-        <div className={`absolute bottom-10 z-50  ${isDarkMode ? 'bg-gray-700' : 'bg-white'}  p-3 border-blue-500 border rounded-xl rounded-bl-none shadow-lg`}>
+        <div className={`absolute lg:top-[85vh] z-50 md:top-[50vh]  top-[100vh] ${isDarkMode ? 'bg-gray-700' : 'bg-white'}  p-3 border-blue-500 border rounded-xl rounded-bl-none shadow-lg`}>
           {hoveredDocPreview}
         </div>
       )}

@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { motion } from 'framer-motion';
-import ThemeContext from './ThemeContext'; // Ensure to import your ThemeContext
+import ThemeContext from './ThemeContext'; 
+import { CodeRounded } from '@mui/icons-material';
+
 
 const DeveloperModeButton = () => {
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext); // Using theme context
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const [isDeveloperMode, setDeveloperMode] = useState(false);
 
   const handleDeveloperModeToggle = () => {
@@ -36,8 +38,13 @@ const DeveloperModeButton = () => {
           fontSize: '15px',
           fontWeight: 'bold',
         }}
+        
       >
-        Developer Mode
+         {/* Responsive text and icon display */}
+         <span className="hidden lg:inline">Developer Mode</span>
+          <span className="lg:hidden">
+          <CodeRounded size={30} /> {/* Developer light icon */}
+        </span>
       </motion.button>
 
       {/* Glimpse of Developer Mode */}

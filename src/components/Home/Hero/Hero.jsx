@@ -8,6 +8,12 @@ import { useContext } from 'react';
 import VoiceAssistant from "./VoiceAssisstant"
 import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
 
+//Import draggable components
+import DraggablePencil from "./DraggablePencil";
+import DraggableFiles from "./DraggableFiles";
+import DraggableFolder from "./DraggableFolder";
+import DraggableReport from "./DraggableReport"
+
 export default function CreateDoc() {
   const { isDarkMode } = useContext(ThemeContext);
 
@@ -25,7 +31,7 @@ export default function CreateDoc() {
             <MoreVertIcon />
           </div>
          
-          <div className="flex justify-between items-center">
+          <div className="flex md:flex-row flex-col justify-between items-center">
             <div>
               <Image
                 src="/createdoc.png"
@@ -42,6 +48,11 @@ export default function CreateDoc() {
               <p className="font-medium py-3 text-md">Blank document</p>
               <VoiceAssistant /> 
             </div>
+
+            <DraggablePencil />
+            <DraggableFiles />
+            <DraggableFolder />
+            <DraggableReport />
 
             <div className="flex-grow mx-4"> 
               <ScrollTrigger />

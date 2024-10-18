@@ -4,6 +4,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { useContext } from "react";
 import ThemeContext from '@/components/Developer Mode/ThemeContext'; 
+import {motion} from "framer-motion"
 
 const SidebarDrawer = ({ open, handleDrawerClose }) => {
   const { isDarkMode } = useContext(ThemeContext); 
@@ -22,30 +23,28 @@ const SidebarDrawer = ({ open, handleDrawerClose }) => {
           color: isDarkMode ? '#ffffff' : '#000000', // text color based on dark mode
         }}
         onMouseLeave={handleDrawerClose}
+        
       >
         <Typography variant="h5" className="p-8 pb-4">
-          <span className="text-blue-500 font-medium">G</span>
-          <span className="text-red-500 font-medium">o</span>
-          <span className="text-yellow-500 font-medium">o</span>
-          <span className="text-blue-500 font-medium">g</span>
-          <span className="text-green-500 font-medium">l</span>
-          <span className="text-red-500 font-medium">e</span>
-          <span className="mx-2">Docs</span>
+          <Typography variant="h6" noWrap className={`flex cursor-pointer items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-700'} `}>
+            <Image src="/docs.png" width={30} height={30} alt="docs" />
+            <motion.h6 whileHover={{scale: 1.05, color: "#2F85F4"}}>InnoDocX</motion.h6>
+          </Typography>
         </Typography>
+
         <hr className="w-full" />
 
         {/* Navbar Items */}
         <div className="px-8 py-4 flex flex-col space-y-4 scale-90">
           {[
-            { name: "Docs", icon: "/docs.png" },
-            { name: "Sheets", icon: "/sheets.png" },
-            { name: "Slides", icon: "/slides.png" },
-            { name: "Form", icon: "/forms.png" },
+            { name: "GitHub Profile", icon: "/github.png", link: "https://github.com/Krisha1703" },
+            { name: "LinkedIn Proflie", icon: "/linkedin.png", link: "https://www.linkedin.com/in/krishabotadara/" },
+            { name: "Personal Portfolio", icon: "/portfolio.png", link: "https://krishabotadara.vercel.app/" },
           ].map((item, index) => (
-            <div key={index} className="flex space-x-5 items-center">
+            <motion.a key={index} href={item.link} target="_blank" rel="noopener noreferrer" className="flex cursor-pointer space-x-5 items-center" whileHover={{x: 20}} transition={{duration: 0.5}}>
               <Image src={item.icon} width={25} height={25} alt={item.name} />
               <Typography className="font-medium">{item.name}</Typography>
-            </div>
+            </motion.a>
           ))}
         </div>
 
@@ -53,24 +52,24 @@ const SidebarDrawer = ({ open, handleDrawerClose }) => {
 
         {/* Settings & Help */}
         <div className="px-8 py-4 flex flex-col space-y-4 scale-90">
-          <div className="flex space-x-4 items-center">
+          <motion.div className="flex space-x-4 items-center cursor-pointer" whileHover={{x: 20}} transition={{duration: 0.5}}>
             <SettingsIcon style={{ color: isDarkMode ? '#ffffff' : '#000000' }} />
             <Typography className="font-medium">{isDarkMode ? <span style={{ color: '#ffffff' }}>Settings</span> : 'Settings'}</Typography>
-          </div>
+          </motion.div>
           
-          <div className="flex space-x-4 items-center">
+          <motion.div className="flex space-x-4 items-center cursor-pointer" whileHover={{x: 20}} transition={{duration: 0.5}}>
             <HelpOutlineIcon style={{ color: isDarkMode ? '#ffffff' : '#000000' }} />
             <Typography className="font-medium">{isDarkMode ? <span style={{ color: '#ffffff' }}>Help & Feedback</span> : 'Help & Feedback'}</Typography>
-          </div>
+          </motion.div>
         </div>
 
         <hr className="w-full" />
 
         {/* Drive */}
-        <div className="flex space-x-4 px-8 py-4 items-center scale-90">
+        <motion.a href="https://drive.google.com/file/d/1jgwHv0YPuyqvEr0hCr0xKJjLHIJzMggG/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="flex space-x-4 px-8 py-4 items-center scale-90" whileHover={{x: 20}} transition={{duration: 0.5}}>
           <Image src="/drive.webp" width={25} height={25} alt="drive" />
-          <Typography className="font-medium">Drive</Typography>
-        </div>
+          <Typography className="font-medium">Resume</Typography>
+        </motion.a>
 
         <hr className="w-full" />
 

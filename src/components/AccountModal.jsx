@@ -23,7 +23,7 @@ const AccountModal = ({ modalOpen, handleModalClose }) => {
   return (
     <Modal open={modalOpen} onClose={handleModalClose}>
       <Box 
-        className="absolute rounded-xl top-[20%] right-[2%] w-1/4 shadow-md p-4 flex flex-col items-center"
+        className="absolute rounded-xl md:top-[10%] lg:top-[20%] right-[2%] lg:w-1/4 md:w-1/2 shadow-md p-4 flex flex-col items-center"
         style={{
           backgroundColor: isDarkMode ? '#424242' : '#ffffff', // Background color based on dark mode
           color: isDarkMode ? '#ffffff' : '#000000', // Text color based on dark mode

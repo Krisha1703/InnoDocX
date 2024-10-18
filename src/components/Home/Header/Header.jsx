@@ -1,6 +1,7 @@
 //React Hooks
 import React, { useState, useContext } from 'react';
 import { useSession } from "next-auth/react";
+import { motion } from 'framer-motion';
 
 //MUI Components
 import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
@@ -76,9 +77,11 @@ export default function HeaderNavbar() {
               <MenuIcon />
             </IconButton>
             
-            <Typography variant="h6" noWrap className={`flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-700'} `}>
-              <Image src="/docs.png" width={30} height={30} alt="docs" />
-              Docs
+            <Typography variant="h6" noWrap className={`flex cursor-pointer items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-700'} `}>
+              <Image src="/docs.png" width={30} height={30} alt="docs" className='md:block hidden'/>
+              
+              <motion.h6 whileHover={{scale: 1.05, color: "#2F85F4"}} className='md:block hidden'>InnoDocX</motion.h6>
+              
             </Typography>
           </div>
 

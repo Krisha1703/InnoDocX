@@ -47,13 +47,13 @@ const ScrollTrigger = () => {
   return (
     <section className=''>
       {/* Continuously animating "Hello" with translations */}
-      <h1 className="text-[2.5rem] text-blue-700 mx-10">
+      <h1 className="md:text-[1.5rem] lg:text-[2.5rem] text-[2rem] text-blue-700 md:mx-10 mx-5 md:mt-0 mt-10">
         {helloTranslations[currentLanguage]}, {session?.user?.name}
       </h1>
 
       {/* Scroll-triggered text animation */}
-      <div ref={ref} className="h-[50vh] flex justify-center items-center">
-        <motion.div className="flex flex-wrap max-w-[550px] justify-center">
+      <div ref={ref} className="md:h-[50vh] h-[20vh] lg:mt-0 md:-mt-40 flex justify-center items-center">
+        <motion.div className="flex flex-wrap sm:max-w-[300px] md:max-w-[450px] lg:max-w-[550px] justify-center">
           {letters.map((letter, index) => {
             const opacity = useTransform(scrollYProgress, [0.1, 0.3], [1, 1]);
             const translateX = useTransform(scrollYProgress, [0, 0.25, 0.5], [0, (Math.random() * 400 - 200), 0]);
@@ -70,7 +70,7 @@ const ScrollTrigger = () => {
                   rotate,
                   display: 'inline-block',
                 }}
-                className="text-[1.2rem] font-black text-blue-400"
+                className="lg:text-[1.2rem] md:text-md text-sm font-black text-blue-400"
               >
                 {letter === ' ' ? '\u00A0' : letter}
               </motion.span>
