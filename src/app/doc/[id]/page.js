@@ -31,11 +31,11 @@ export default function Page({ params }) {
   const router = useRouter();
   const id = params.id; //Retrieve document id from the url path
 
-  const [snapshot, loading] = useDocumentOnce(
-    session?.user?.email
-      ? doc(collection(db, "userDocs", session?.user?.email, "docs"), id)
-      : null
-  );
+  const docRef = session?.user?.email
+  ? doc(collection(db, "userDocs", session?.user?.email, "docs"), id)
+  : null;
+
+  const [snapshot, loading] = useDocumentOnce(docRef);
 
   const [isRenaming, setIsRenaming] = useState(false); // Track rename state
   const [newFileName, setNewFileName] = useState(""); // New file name state
