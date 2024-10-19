@@ -73,7 +73,7 @@ const ShareDoc = ({ id, userEmail }) => {
         <h2 onClick={() => { console.log('Share button clicked'); setShareDoc(true); }}> Share</h2>
 
         {shareDoc && (
-          <div className={`absolute top-20 right-10 w-1/4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} p-4 rounded-md shadow-md`}>
+          <div className={`absolute top-20 right-10 md:w-1/4 w-3/4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} p-4 rounded-md shadow-md`}>
             <p>Share this document:</p>
 
             <input

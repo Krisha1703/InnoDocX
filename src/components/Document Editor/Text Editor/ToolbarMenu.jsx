@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import ThemeContext from "@/components/Developer Mode/ThemeContext";
+import { MenuOpen } from "@mui/icons-material";
 
 const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCountClick, handle3DStatisticsClick, handleAnalyticsDashboard }) => {
   const [openMenu, setOpenMenu] = useState(null); // Track the open menu
@@ -33,22 +34,17 @@ const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCoun
     <div className="flex items-center text-sm space-x-2 h-8">
       {/* For small screens: Toggle button for the toolbar */}
       {isSmallScreen && (
-        <div>
-          <button
-            className={`p-1 px-2 hover:rounded-md cursor-pointer ${isDarkMode ? 'bg-black text-white' : 'bg-white text-gray-800'}`}
-            onClick={() => setIsMenuVisible(!isMenuVisible)}
-          >
-            {isMenuVisible ? 'Close Menu' : 'Open Menu'}
-          </button>
+        <div className="absolute top-[7%] left-[13%] scale-150">
+          <MenuOpen  onClick={() => setIsMenuVisible(!isMenuVisible)} />
         </div>
       )}
 
       {/* Show the toolbar menus only if it's not a small screen or the menu is visible */}
       {(!isSmallScreen || isMenuVisible) && (
-        <div className="flex md:flex-row md:mt-0 mt-60 flex-col">
+        <div className="flex md:flex-row md:mt-0 mt-60 z-50 flex-col">
           {/* "File" Menu */}
           <div className="relative">
-            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 px-2 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('file')}>
+            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 md:px-2 px-10 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('file')}>
               File
             </p>
             {openMenu === 'file' && (
@@ -63,14 +59,14 @@ const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCoun
 
           {/* "Edit" Menu */}
           <div className="relative">
-            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 px-2 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('edit')}>
+            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1  md:px-2 px-10 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('edit')}>
               Edit
             </p>
           </div>
 
           {/* "View" Menu */}
           <div className="relative">
-            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 px-2 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('view')}>
+            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1  md:px-2 px-10 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('view')}>
               View
             </p>
             {openMenu === 'view' && (
@@ -85,7 +81,7 @@ const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCoun
 
           {/* "Format" Menu */}
           <div className="relative">
-            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 px-2 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('format')}>
+            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 md:px-2 px-10 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('format')}>
               Format
             </p>
             {openMenu === 'format' && (
@@ -97,7 +93,7 @@ const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCoun
 
           {/* "Tools" Menu */}
           <div className="relative">
-            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 px-2 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('tools')}>
+            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 md:px-2 px-10 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('tools')}>
               Tools
             </p>
             {openMenu === 'tools' && (
@@ -111,7 +107,7 @@ const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCoun
 
           {/* "Extension" Menu */}
           <div className="relative">
-            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 px-2 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('extension')}>
+            <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 md:px-2 px-10 hover:rounded-md cursor-pointer`} onClick={() => toggleMenu('extension')}>
               Extension
             </p>
             {openMenu === 'extension' && (
@@ -123,7 +119,7 @@ const ToolBarMenu = ({ handleScreenSizeChange, toggleOrientation, handleWordCoun
           </div>
 
           {/* "Help" Menu */}
-          <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 px-2 hover:rounded-md cursor-pointer`}>Help</p>
+          <p className={`${isDarkMode ? 'bg-black text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200'} p-1 md:px-2 px-10 hover:rounded-md cursor-pointer`}>Help</p>
         </div>
       )}
     </div>

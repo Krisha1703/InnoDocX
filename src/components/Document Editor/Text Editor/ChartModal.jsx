@@ -16,7 +16,7 @@ const ChartModal = ({ modalOpen, handleModalClose }) => {
       aria-labelledby="word-count-title"
       aria-describedby="word-count-description"
     >
-      <Box className={`absolute rounded-xl top-[20%] left-[35%] w-1/2 shadow-md p-4 pb-10 ${isDarkMode ? 'bg-black text-white' : 'bg-white'} flex flex-col items-center`}>
+      <Box className={`absolute rounded-xl top-[20%] md:left-[35%] left-[10%] md:w-1/2 w-3/4 shadow-md p-4 pb-10 ${isDarkMode ? 'bg-black text-white' : 'bg-white'} flex flex-col items-center`}>
         <CloseIcon className="cursor-pointer absolute right-5 mt-0 mb-10" onClick={handleModalClose} />
         <Typography variant="h6" className="my-10">3D Statistics </Typography>
         <ThreeDChart />

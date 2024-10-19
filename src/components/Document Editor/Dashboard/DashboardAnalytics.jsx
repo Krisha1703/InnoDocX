@@ -32,7 +32,7 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
               </div>
               
               {/*Dashboard layout*/}
-              <div className="grid grid-cols-4 gap-5 p-4 my-4">
+              <div className="md:grid md:grid-cols-4 md:gap-5 p-4 my-4 flex flex-col md:space-y-0 md:space-x-0 space-y-4 space-x-0">
                   {/*Total words*/}
                   <div className={`card pb-10 p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
                       <Typography>Total Words</Typography>
