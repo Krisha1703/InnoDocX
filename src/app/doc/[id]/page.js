@@ -67,6 +67,36 @@ export default function Page({ params }) {
     }
   }, [snapshot]);
 
+  // Update editor style based on orientation
+  useEffect(() => {
+    const editorElement = document.querySelector(".custom-editor");
+
+    if (editorElement) {
+      if (orientation === "landscape") {
+        editorElement.style.width = "100vw";
+        editorElement.style.height = "50vh";
+      } else {
+        editorElement.style.width = "60vw";
+      }
+    }
+  }, [orientation]);
+
+  useEffect(() => {
+    const editorElement = document.querySelector(".custom-editor");
+
+    if (editorElement) {
+      if (screenSize === "50%") {
+        editorElement.style.width = "50vw";
+        editorElement.style.height = "50vh";
+      } else if (screenSize === "75%") {
+        editorElement.style.width = "75vw";
+        editorElement.style.height = "75vh";
+      } else if (screenSize === "100%") {
+        editorElement.style.width = "90vw";
+      }
+    }
+  }, [screenSize]);
+
   // Function to handle renaming and updating Firebase
   const handleRename = async () => {
     if (!newFileName.trim()) {
@@ -111,20 +141,6 @@ export default function Page({ params }) {
     );
   };
 
-  // Update editor style based on orientation
-  useEffect(() => {
-    const editorElement = document.querySelector(".custom-editor");
-
-    if (editorElement) {
-      if (orientation === "landscape") {
-        editorElement.style.width = "100vw";
-        editorElement.style.height = "50vh";
-      } else {
-        editorElement.style.width = "60vw";
-      }
-    }
-  }, [orientation]);
-
   const handleScreenSizeChange = (size) => {
     if (size === "Fit") {
       setScreenSize("100%");
@@ -132,22 +148,6 @@ export default function Page({ params }) {
       setScreenSize(size);
     }
   };
-
-  useEffect(() => {
-    const editorElement = document.querySelector(".custom-editor");
-
-    if (editorElement) {
-      if (screenSize === "50%") {
-        editorElement.style.width = "50vw";
-        editorElement.style.height = "50vh";
-      } else if (screenSize === "75%") {
-        editorElement.style.width = "75vw";
-        editorElement.style.height = "75vh";
-      } else if (screenSize === "100%") {
-        editorElement.style.width = "90vw";
-      }
-    }
-  }, [screenSize]);
 
   const handleWordCountClick = () => {
     setCountModalOpen(true);
