@@ -40,6 +40,27 @@ export default function Page({ params }) {
   const [isRenaming, setIsRenaming] = useState(false); // Track rename state
   const [newFileName, setNewFileName] = useState(""); // New file name state
 
+  // For Advanced Analytics Dashboard
+  const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
+
+  // Page Orientation - Landscape or Portrait
+  const [orientation, setOrientation] = useState("portrait");
+
+  // For Handling Screen Size Percentages - 50%, 75%, 100%
+  const [screenSize, setScreenSize] = useState("100%");
+
+  // Word Count Modal
+  const [countModalOpen, setCountModalOpen] = useState(false);
+
+  // 3D Statistics Modal
+  const [statisticsModalOpen, setStatisticsModalOpen] = useState(false);
+
+  // Toggling the Toolbar Menus
+  const [openMenu, setOpenMenu] = useState(null);
+
+  // User Profile Modal
+  const [modalOpen, setModalOpen] = useState(false);
+
   useEffect(() => {
     if (snapshot && snapshot.data()?.fileName) {
       setNewFileName(snapshot.data().fileName); // Set the initial file name when data is fetched
@@ -76,9 +97,6 @@ export default function Page({ params }) {
 
   if (!session) return <Login />;
 
-  // For Advanced Analytics Dashboard
-  const [isDashboardModalOpen, setIsDashboardModalOpen] = useState(false);
-
   const handleAnalyticsDashboard = () => {
     setIsDashboardModalOpen(true);
   };
@@ -86,9 +104,6 @@ export default function Page({ params }) {
   const closeModal = () => {
     setIsDashboardModalOpen(false);
   };
-
-  // Page Orientation - Landscape or Portrait
-  const [orientation, setOrientation] = useState("portrait");
 
   const toggleOrientation = () => {
     setOrientation((prev) =>
@@ -109,9 +124,6 @@ export default function Page({ params }) {
       }
     }
   }, [orientation]);
-
-  // For Handling Screen Size Percentages - 50%, 75%, 100%
-  const [screenSize, setScreenSize] = useState("100%");
 
   const handleScreenSizeChange = (size) => {
     if (size === "Fit") {
@@ -137,9 +149,6 @@ export default function Page({ params }) {
     }
   }, [screenSize]);
 
-  // Word Count Modal
-  const [countModalOpen, setCountModalOpen] = useState(false);
-
   const handleWordCountClick = () => {
     setCountModalOpen(true);
   };
@@ -147,9 +156,6 @@ export default function Page({ params }) {
   const handleWordCountClose = () => {
     setCountModalOpen(false);
   };
-
-  // 3D Statistics Modal
-  const [statisticsModalOpen, setStatisticsModalOpen] = useState(false);
 
   const handle3DStatisticsClick = () => {
     setStatisticsModalOpen(true);
@@ -159,15 +165,9 @@ export default function Page({ params }) {
     setStatisticsModalOpen(false);
   };
 
-  // Toggling the Toolbar Menus
-  const [openMenu, setOpenMenu] = useState(null);
-
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
-
-  // User Profile Modal
-  const [modalOpen, setModalOpen] = useState(false);
 
   const handleModalOpen = () => {
     setModalOpen(true);
