@@ -27,19 +27,6 @@ const ScrollTrigger = () => {
     th: 'สวัสดี' //Thai
   };
 
-  // Automatically cycle through translations
-  useEffect(() => {
-    const languages = Object.keys(helloTranslations);
-    let index = 0;
-
-    const intervalId = setInterval(() => {
-      index = (index + 1) % languages.length;
-      setCurrentLanguage(languages[index]);
-    }, 1000); // Change translation every second
-
-    return () => clearInterval(intervalId); // Cleanup interval on component unmount
-  }, []);
-
   // Sample text
   const text = '"Every word is a step towards creativity, and every shared idea transforms drafts into masterpieces. Together, we write the future."';
   const letters = text.split('');
@@ -55,6 +42,19 @@ const ScrollTrigger = () => {
   const rotate = letters.map(() =>
     useTransform(scrollYProgress, [0, 0.25, 0.5], [0, Math.random() * 360 - 180, 0])
   );
+  
+  // Automatically cycle through translations
+  useEffect(() => {
+    const languages = Object.keys(helloTranslations);
+    let index = 0;
+
+    const intervalId = setInterval(() => {
+      index = (index + 1) % languages.length;
+      setCurrentLanguage(languages[index]);
+    }, 1000); // Change translation every second
+
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
+  }, []);
 
   return (
     <section className=''>
