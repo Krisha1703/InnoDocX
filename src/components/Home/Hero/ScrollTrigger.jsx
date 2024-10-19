@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useSession } from "next-auth/react";
+import { useMemo } from 'react';
 
 const ScrollTrigger = () => {
   const ref = useRef(null);
@@ -31,18 +32,24 @@ const ScrollTrigger = () => {
   const text = '"Every word is a step towards creativity, and every shared idea transforms drafts into masterpieces. Together, we write the future."';
   const letters = text.split('');
 
-  // Define the transform values outside the map function
+  // Precompute random values for each letter using useMemo
+  const randomXValues = useMemo(() => letters.map(() => Math.random() * 400 - 200), [letters]);
+  const randomYValues = useMemo(() => letters.map(() => Math.random() * 400 - 200), [letters]);
+  const randomRotationValues = useMemo(() => letters.map(() => Math.random() * 360 - 180), [letters]);
+
   const opacity = useTransform(scrollYProgress, [0.1, 0.3], [1, 1]);
-  const translateX = letters.map(() =>
-    useTransform(scrollYProgress, [0, 0.25, 0.5], [0, (Math.random() * 400 - 200), 0])
+
+  // Use the precomputed random values in useTransform
+  const translateX = letters.map((_, index) =>
+    useTransform(scrollYProgress, [0, 0.25, 0.5], [0, randomXValues[index], 0])
   );
-  const translateY = letters.map(() =>
-    useTransform(scrollYProgress, [0, 0.25, 0.5], [0, (Math.random() * 400 - 200), 0])
+  const translateY = letters.map((_, index) =>
+    useTransform(scrollYProgress, [0, 0.25, 0.5], [0, randomYValues[index], 0])
   );
-  const rotate = letters.map(() =>
-    useTransform(scrollYProgress, [0, 0.25, 0.5], [0, Math.random() * 360 - 180, 0])
+  const rotate = letters.map((_, index) =>
+    useTransform(scrollYProgress, [0, 0.25, 0.5], [0, randomRotationValues[index], 0])
   );
-  
+
   // Automatically cycle through translations
   useEffect(() => {
     const languages = Object.keys(helloTranslations);
