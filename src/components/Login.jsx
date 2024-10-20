@@ -9,7 +9,7 @@ function Login() {
         <Button
             className="w-44 mt-10 text-white"
             color="blue"
-            buttonType="filled"
+            buttontype="filled"
             ripple="light"
             onClick={signIn}
         >

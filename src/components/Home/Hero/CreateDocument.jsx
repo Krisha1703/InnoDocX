@@ -106,7 +106,7 @@ const CreateDocument = ({ showModal, setShowModal }) => {
         p: 4,
         borderRadius: 1,
       }} style={{ backgroundColor: isDarkMode ? '#333' : '#F8F9FA', opacity: 1 }}>
-        <Typography variant="h6" component="h2">
+        <Typography variant="h6" component="h6">
           Enter name of the document
         </Typography>
         

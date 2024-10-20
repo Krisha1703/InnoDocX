@@ -10,7 +10,6 @@ import { useSession } from "next-auth/react";
 
 //UI Components
 import { ThemeProvider } from '../components/Developer Mode/ThemeContext';
-import Header from "../components/Home/Header/Header";
 import Hero from "../components/Home/Hero/Hero";
 import Login from "../components/Login";
 
