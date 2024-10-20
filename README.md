@@ -36,6 +36,7 @@
 
 ### 5. Interactive Hero Section
 - Includes a text-scrolling effect to enhance the user experience and make the landing page more dynamic and engaging.
+https://github.com/user-attachments/assets/5b34c3f5-ccd1-4dbd-9e98-f1099be9b13c
 
 ### 6. Document Management
 - Create, rename, delete, and share documents with other users.
