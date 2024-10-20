@@ -21,10 +21,11 @@ import ShareDoc from "@/components/Document Editor/Text Editor/ShareDocument";
 import ChartModal from "@/components/Document Editor/Text Editor/ChartModal";
 import DashboardAnalytics from "@/components/Document Editor/Dashboard/DashboardAnalytics";
 import WordCountModal from "@/components/Document Editor/Text Editor/WordCountModal";
-import ToolBarMenu from "@/components/Document Editor/Text Editor/ToolbarMenu";
 import DeveloperModeButton from "@/components/Developer Mode/DeveloperModeButton";
 import DarkMode from "@/components/Developer Mode/DarkMode"
 
+import dynamic from "next/dynamic";
+const ToolBarMenu = dynamic(() => import('@/components/Document Editor/Text Editor/ToolbarMenu'), { ssr: false });
 
 export default function Page({ params }) {
   const { data: session } = useSession();

@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic'; // Import dynamic from Next.js
 import useAppState from '../../useAppState';
 import { Button } from '@mui/material';
 
-// Dynamically import CreateDocument component with { ssr: false }
 const DynamicCreateDocument = dynamic(() => import('./CreateDocument'), { ssr: false });
 
 const VoiceAssistant = () => {
@@ -62,14 +61,13 @@ const VoiceAssistant = () => {
   };
 
   useEffect(() => {
-    // Set isBrowser to true when the component mounts
     setIsBrowser(typeof window !== 'undefined');
 
     // Activate voice assistant when component mounts
     if (isBrowser) {
       speak(`Hello, ${session?.user?.name}, I will be assisting you today.`);
     }
-  }, [session, isBrowser]); // Re-run the effect if the session or isBrowser changes
+  }, [session, isBrowser]); 
 
   return (
     <div>

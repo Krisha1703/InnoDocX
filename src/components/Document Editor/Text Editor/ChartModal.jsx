@@ -2,9 +2,11 @@
 
 import { Modal, Box, Typography } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
-import ThreeDChart from "./3DCharts"
 import { useContext } from "react";
 import ThemeContext from "@/components/Developer Mode/ThemeContext";
+
+import dynamic from "next/dynamic";
+const ThreeDChart = dynamic(() => import('./3DCharts'), { ssr: false });
 
 const ChartModal = ({ modalOpen, handleModalClose }) => {
   const { isDarkMode } = useContext(ThemeContext); 

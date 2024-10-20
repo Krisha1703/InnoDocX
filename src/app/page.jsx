@@ -14,6 +14,10 @@ import Header from "../components/Home/Header/Header";
 import Hero from "../components/Home/Hero/Hero";
 import Login from "../components/Login";
 
+import dynamic from "next/dynamic";
+const Header = dynamic(() => import('../components/Home/Header/Header'), { ssr: false });
+
+
 export default function Home() {
   const { data: session } = useSession(); //User session data
 

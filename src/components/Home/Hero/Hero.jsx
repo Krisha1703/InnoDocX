@@ -9,10 +9,12 @@ import { useContext } from 'react';
 import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
 
 //Import draggable components
-import DraggablePencil from "./DraggablePencil";
-import DraggableFiles from "./DraggableFiles";
-import DraggableFolder from "./DraggableFolder";
-import DraggableReport from "./DraggableReport"
+
+import dynamic from "next/dynamic";
+const DraggablePencil = dynamic(() => import('./DraggablePencil'), { ssr: false });
+const DraggableFiles = dynamic(() => import('./DraggableFiles'), { ssr: false });
+const DraggableFolder = dynamic(() => import('./DraggableFolder'), { ssr: false });
+const DraggableReport = dynamic(() => import('./DraggableReport'), { ssr: false });
 
 const VoiceAssistant = dynamic(() => import('./VoiceAssisstant'), { ssr: false });
 
