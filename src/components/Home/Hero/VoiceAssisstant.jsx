@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import CreateDocument from './CreateDocument';
+import dynamic from 'next/dynamic'; // Import dynamic from Next.js
 import useAppState from '../../useAppState';
 import { Button } from '@mui/material';
+
+// Dynamically import CreateDocument component with { ssr: false }
+const DynamicCreateDocument = dynamic(() => import('./CreateDocument'), { ssr: false });
 
 const VoiceAssistant = () => {
   const { session, showModal, setShowModal } = useAppState();
   const [isListening, setIsListening] = useState(false);
+  const [isBrowser, setIsBrowser] = useState(false); // State to check if running in the browser
 
   // Function to speak a message
   const speak = (message) => {
-    const utterance = new SpeechSynthesisUtterance(message);
-    window.speechSynthesis.speak(utterance);
+    if (isBrowser) { // Only call this if running in the browser
+      const utterance = new SpeechSynthesisUtterance(message);
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   // Function to start speech recognition
   const startListening = () => {
+    if (!isBrowser) return; // Exit if not in the browser
+
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = 'en-US';
     recognition.interimResults = false;
@@ -31,9 +39,10 @@ const VoiceAssistant = () => {
         transcript.includes('create a new document') ||
         transcript.includes('create new file') ||
         transcript.includes('create new doc') ||
+        transcript.includes('create document') ||
+        transcript.includes('create doc') ||
         transcript.includes('want to create')
-      )
-      {
+      ) {
         setShowModal(true);
         speak('Creating a new document for you.');
       } else {
@@ -53,18 +62,23 @@ const VoiceAssistant = () => {
   };
 
   useEffect(() => {
+    // Set isBrowser to true when the component mounts
+    setIsBrowser(typeof window !== 'undefined');
+
     // Activate voice assistant when component mounts
-    speak(`Hello, ${session?.user?.name}, I will be assisting you today.`);
-    // Start listening when the user clicks the button
-    startListening();
-  }, [session]); // Re-run the effect if the session changes
+    if (isBrowser) {
+      speak(`Hello, ${session?.user?.name}, I will be assisting you today.`);
+    }
+  }, [session, isBrowser]); // Re-run the effect if the session or isBrowser changes
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={startListening}>Voice Assistant</Button>
+      <Button variant="contained" color="primary" onClick={startListening}>
+        Voice Assistant
+      </Button>
   
       {showModal && (
-        <CreateDocument showModal={showModal} setShowModal={setShowModal} />
+        <DynamicCreateDocument showModal={showModal} setShowModal={setShowModal} />
       )}
     </div>
   );

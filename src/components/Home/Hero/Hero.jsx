@@ -1,11 +1,11 @@
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import useAppState from '../../useAppState';
 import CreateDocument from "./CreateDocument"
 import ListDocuments from "../List Documents/ListDocuments"
 import ScrollTrigger from "./ScrollTrigger"
 import { useContext } from 'react';
-import VoiceAssistant from "./VoiceAssisstant"
 import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
 
 //Import draggable components
@@ -13,6 +13,8 @@ import DraggablePencil from "./DraggablePencil";
 import DraggableFiles from "./DraggableFiles";
 import DraggableFolder from "./DraggableFolder";
 import DraggableReport from "./DraggableReport"
+
+const VoiceAssistant = dynamic(() => import('./VoiceAssisstant'), { ssr: false });
 
 export default function CreateDoc() {
   const { isDarkMode } = useContext(ThemeContext);

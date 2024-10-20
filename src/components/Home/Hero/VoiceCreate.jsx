@@ -1,16 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 
-const VoiceCreate = ({ setDocName, setCategory, setCustomCategory, setDocDescription, docCategories, isCustomCategory, setIsCustomCategory }) => {
+const VoiceCreate = ({
+  setDocName,
+  setCategory,
+  setCustomCategory,
+  setDocDescription,
+  docCategories,
+  isCustomCategory,
+  setIsCustomCategory,
+}) => {
   const [isListening, setIsListening] = useState(false);
   const [step, setStep] = useState(1); // Track the current step of the process
+  const [SpeechRecognition, setSpeechRecognition] = useState(null);
+
+  // Check if window is defined and set the SpeechRecognition
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (recognition) {
+        setSpeechRecognition(new recognition());
+      }
+    }
+  }, []);
 
   // Function to speak a message and wait for it to finish before starting recognition
   const speak = (message, callback) => {
     const utterance = new SpeechSynthesisUtterance(message);
     utterance.onend = () => {
       if (callback) {
-        callback();  // Start listening after speaking has finished
+        callback(); // Start listening after speaking has finished
       }
     };
     window.speechSynthesis.speak(utterance);
@@ -18,32 +37,33 @@ const VoiceCreate = ({ setDocName, setCategory, setCustomCategory, setDocDescrip
 
   // Function to start speech recognition
   const startListening = (callback) => {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'en-US';
-    recognition.interimResults = false;
+    if (!SpeechRecognition) return; // Exit if SpeechRecognition is not available
 
-    recognition.onstart = () => {
+    SpeechRecognition.lang = 'en-US';
+    SpeechRecognition.interimResults = false;
+
+    SpeechRecognition.onstart = () => {
       console.log('Voice recognition activated. Speak now.');
       setIsListening(true);
     };
 
-    recognition.onresult = (event) => {
+    SpeechRecognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript.toLowerCase();
       console.log('You said:', transcript); // Debugging log
 
       callback(transcript);
     };
 
-    recognition.onend = () => {
+    SpeechRecognition.onend = () => {
       console.log('Voice recognition stopped.');
       setIsListening(false);
     };
 
-    recognition.onerror = (event) => {
+    SpeechRecognition.onerror = (event) => {
       console.error('Error occurred in recognition: ' + event.error);
     };
 
-    recognition.start();
+    SpeechRecognition.start();
   };
 
   // Voice-based steps handler

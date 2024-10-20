@@ -3,9 +3,11 @@ import { toast } from 'react-toastify';
 import { doc, collection, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase'; 
 import useAppState from '../../useAppState';
-import VoiceCreate from './VoiceCreate';
+import dynamic from 'next/dynamic';
 import { useContext, useEffect, useState } from 'react';
 import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
+
+const VoiceCreate = dynamic(() => import('./VoiceCreate'), { ssr: false });
 
 const CreateDocument = ({ showModal, setShowModal }) => {
   const { isDarkMode } = useContext(ThemeContext); 
