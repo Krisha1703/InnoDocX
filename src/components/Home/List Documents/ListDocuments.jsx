@@ -117,6 +117,7 @@ const ListDocuments = () => {
       };
 
       const fetchDocuments = (filterCategory = '', sortField = 'createdAt', sortDirection = 'desc') => {
+        toast.dismiss();
         if (session) {
           try {
             const q = query(
@@ -149,8 +150,9 @@ const ListDocuments = () => {
                     return nameB.localeCompare(nameA); // Sort descending
                   }
                 });
-                toast.success(`Documents sorted by ${sortField} in ${sortDirection} order.`);
+                
               }
+              toast.success(`Documents sorted by ${sortField} in ${sortDirection} order.`);
       
               // Set the documents in state
               setDocs(documents);
@@ -158,9 +160,8 @@ const ListDocuments = () => {
               // Extract unique categories from documents for the category filter dropdown
               const uniqueCategories = [...new Set(documents.map((doc) => doc.Category))];
               setCategories(uniqueCategories);
-      
+
               // Show toast notifications for sorting and filtering
-             
               if (filterCategory) {
                 toast.success(`Filtered documents by category: ${filterCategory}`);
               }

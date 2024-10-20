@@ -2,6 +2,8 @@ import React, { useState, useContext } from 'react';
 import { motion } from 'framer-motion';
 import ThemeContext from './ThemeContext'; 
 import { CodeRounded } from '@mui/icons-material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
 
 const DeveloperModeButton = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
@@ -10,10 +12,19 @@ const DeveloperModeButton = () => {
   const handleDeveloperModeToggle = () => {
     setDeveloperMode(!isDeveloperMode);
     toggleTheme(); // Optionally toggle theme when switching modes
+    toast.dismiss();
+    if (isDeveloperMode){
+      toast.success("Developer mode turned on!");
+    }
+    else{
+      toast.success("Developer mode turned off!");
+    }
+    
   };
 
   return (
     <div className="flex flex-col items-center justify-center">
+      <ToastContainer />
       {/* 3D Developer Mode Button */}
       <motion.button
         onClick={handleDeveloperModeToggle}
@@ -46,27 +57,6 @@ const DeveloperModeButton = () => {
         </span>
       </motion.button>
 
-      {/* Glimpse of Developer Mode */}
-      {/*{isDeveloperMode && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }} // Initial state for the logs
-          animate={{ opacity: 1, scale: 1 }}   // Final state for the logs
-          transition={{ duration: 0.5 }}        // Animation duration
-          style={{
-            marginTop: '20px',
-            padding: '20px',
-            backgroundColor: '#222',
-            color: '#00ff00',
-            borderRadius: '10px',
-            boxShadow: '0 5px 20px rgba(0, 0, 0, 0.3)',
-            textAlign: 'left',
-            width: '80%',
-            maxWidth: '500px',
-          }}
-        >
-         
-        </motion.div>
-      )}*/}
     </div>
   );
 };
