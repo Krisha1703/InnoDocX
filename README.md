@@ -9,6 +9,11 @@
 ### 1. Developer Mode (Dark Mode)
 - Activates a developer console panel with commands for file navigation and management, including:
   - `cd`: Navigate file directories.
+    - `cd about`: Displays information about the project (InnoDocX).
+    - `cd features`: Lists the features of the project.
+    - `cd tools`: Lists tools and technologies used to create this project.
+    - `cd summary`: Displays the summarized content from the text in the editor
+    - `cd sentiment`: Shows the overall text sentiment
   - `look`: Search for a word/phrase in the document and retrieve its position.
   - `clear`: Clear the console screen.
   - `cat`: Display the document content in the terminal.
@@ -36,7 +41,6 @@
 
 ### 5. Interactive Hero Section
 - Includes a text-scrolling effect to enhance the user experience and make the landing page more dynamic and engaging.
-https://github.com/user-attachments/assets/5b34c3f5-ccd1-4dbd-9e98-f1099be9b13c
 
 ### 6. Document Management
 - Create, rename, delete, and share documents with other users.
