@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { EditorState, ContentState } from "draft-js";
 import { useSession } from "next-auth/react";
+import { getSummarizedText, sentimentData } from '../Document Editor/Text Editor/TextEditor';
 
 const DeveloperConsole = ({ filename, editorState, setEditorState, wordCountState, sentenceCountState, characterCountState }) => {
   const { data: session } = useSession();
@@ -25,38 +26,75 @@ const DeveloperConsole = ({ filename, editorState, setEditorState, wordCountStat
   // Handle the "cd" command
   const handleCDCommand = (inputText, currentPath, newLines) => {
     const newDir = inputText.replace("cd ", "");
-
+  
     if (newDir === "..") {
+      // Move to the previous directory
       if (pathStack.length > 1) {
-        setPathStack((prev) => prev.slice(0, -1)); // Move to the previous directory
+        setPathStack((prev) => prev.slice(0, -1)); // Move up to the previous directory
         currentPath = pathStack[pathStack.length - 2];
         newLines.push(`Moved up to directory: ${currentPath}`);
       } else {
         newLines.push("You are already at the root directory.");
       }
-    } else if (newDir === "story") {
-      setAvailableGenres(["horror", "mystery", "fantasy"]);
-      newLines.push(`Available genres: horror, mystery, fantasy`);
-      setPathStack((prev) => [...prev, `${currentPath}\\${newDir}`]);
-    } else if (availableGenres.includes(newDir)) {
-      const genre = newDir;
-      setAvailableAudiences(["kids", "children", "teens", "adults"]);
-      newLines.push(`Available audiences for ${genre}: kids, children, teens, adults`);
-      setPathStack((prev) => [...prev, `${currentPath}\\${genre}`]);
-    } else if (availableAudiences.includes(newDir)) {
-      const audience = newDir;
-      const genre = pathStack[pathStack.length - 1].split("\\").pop();
-      const message = `The ${genre} story for the target audience ${audience} has been selected.`;
-      const contentState = editorState.getCurrentContent();
-      const newContentState = ContentState.createFromText(contentState.getPlainText() + '\n' + message);
-      setEditorState(EditorState.createWithContent(newContentState));
-      newLines.push(message);
-      setPathStack((prev) => [...prev, `${currentPath}\\${audience}`]);
+    } else if (newDir === "about" || newDir === "features" || newDir === "tools" || newDir === "summary" || newDir === "sentiment") {
+      // Allow navigation to "about", "features", or "tools" only from the root directory
+      if (pathStack.length === 1) { // User is at the root directory
+        if (newDir === "about") {
+          const aboutText = `
+          This project is inpsired from Google Docs and this console simulate a terminal-like experience. 
+          It allows users to navigate through different commands and directories while exploring the features 
+          and technologies used to build this project. The project has been created by Krisha and the source code is now available here: https://github.com/Krisha1703/InnoDocX`;
+          newLines.push(aboutText);
+        } else if (newDir === "features") {
+          const featureText = `
+            Features of this project:
+            - Developer Mode (Dark Mode) with Interactive Terminal-Like Command Input
+            - User Authentication and Account Management
+            - Voice-Enabled Search and Document Management
+            - Voice Assistant for Document Creation
+            - Interactive Hero Section with scroll text effect
+            - Document Management, Sorting, and Filtering
+            - File Preview and Hover Effects
+            - Advanced Analytics Dashboard
+            - Find and Replace
+            - Toast Notifications
+          `;
+          newLines.push(featureText);
+        } else if (newDir === "tools") {
+          const toolText = `
+            Technologies used in this project:
+            - Draft.js for Rich Text Editing and State Management
+            - Next.js for Frontend Development, Server-Side Rendering, and Creating APIs
+            - Natural.js and Nlp.js for Natural Language Processing
+            - Firebase for Authentication and Database Storage
+            - Framer Motion for Animations and Transitions
+            - React Chart for Data Visualization
+            - Tailwind CSS for Utility-First Styling and Responsive Design
+          `;
+          newLines.push(toolText);
+        } else if (newDir === "summary") {
+          const summarizedText = getSummarizedText();
+          newLines.push(summarizedText);
+        } else if (newDir === "sentiment") {
+          const { sentimentCategory, sentimentScore } = sentimentData;
+          const percentageScore = Math.max(0, Math.min(sentimentScore ?? 0, 100)); 
+          newLines.push(`${sentimentCategory} - ${percentageScore.toFixed(2)}%`);
+        }
+
+        // Update path 
+        setPathStack((prev) => [...prev, `${currentPath}\\${newDir}`]);
+      } else {
+        // User is not in the root directory, show a warning message
+        newLines.push(`You must return to the root directory before navigating to ${newDir}.`);
+      }
     } else {
       newLines.push(`Unknown directory: ${newDir}`);
     }
+  
+    // Always push the current path prompt at the end
     newLines.push(`${currentPath}>`);
   };
+  
 
   // Handle the "cat" command 
   const handleCatCommand = (newLines) => {
