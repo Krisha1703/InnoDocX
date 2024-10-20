@@ -150,9 +150,9 @@ const ListDocuments = () => {
                     return nameB.localeCompare(nameA); // Sort descending
                   }
                 });
-                
+                toast.success(`Documents sorted by ${sortField} in ${sortDirection} order.`);
               }
-              toast.success(`Documents sorted by ${sortField} in ${sortDirection} order.`);
+              
       
               // Set the documents in state
               setDocs(documents);
