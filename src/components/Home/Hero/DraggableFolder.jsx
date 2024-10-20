@@ -19,16 +19,13 @@ const DraggableFolder = () => {
   };
 
   useEffect(() => {
-    // Set initial drag constraints based on screen size
     updateDragConstraints();
-
-    // Add event listener to update constraints on window resize
     window.addEventListener('resize', updateDragConstraints);
-
     return () => {
       window.removeEventListener('resize', updateDragConstraints);
     };
   }, []);
+
   return (
     <motion.div
       className='absolute lg:top-[60%] lg:right-[20%] md:top-[40%] md:right-[5%] top-[25%] right-[75%] cursor-pointer'
@@ -38,7 +35,7 @@ const DraggableFolder = () => {
       whileHover={{ scale: 1.1 }} // Scale up slightly on hover
       whileTap={{ scale: 0.95 }} // Slightly scale down on click/drag
     >
-       <Image src="/folder.png" width={100} height={100} alt="Draggable Files" draggable="false" className='md:scale-100 scale-50'/>
+       <Image src="/folder.png" width={100} height={100} alt="Draggable Files" draggable="false" loading='lazy' className='md:scale-100 scale-50'/>
     </motion.div>
   );
 };

@@ -16,7 +16,7 @@ const ScrollTrigger = () => {
 
   useEffect(() => {
     // Manually update the scroll progress from Framer Motion's scrollYProgress
-    scrollYProgress.onChange((latest) => {
+    scrollYProgress.on("change", (latest) => {
       setScrollProgress(latest);
     });
   }, [scrollYProgress]);

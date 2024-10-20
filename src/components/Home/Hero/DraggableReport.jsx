@@ -19,12 +19,8 @@ const DraggableReport = () => {
   };
 
   useEffect(() => {
-    // Set initial drag constraints based on screen size
     updateDragConstraints();
-
-    // Add event listener to update constraints on window resize
     window.addEventListener('resize', updateDragConstraints);
-
     return () => {
       window.removeEventListener('resize', updateDragConstraints);
     };
@@ -39,7 +35,7 @@ const DraggableReport = () => {
       whileHover={{ scale: 1.1 }} // Scale up slightly on hover
       whileTap={{ scale: 0.95 }} // Slightly scale down on click/drag
     >
-       <Image src="/report.webp" width={100} height={100} alt="Draggable Files" draggable="false" className='md:scale-100 scale-50'/>
+       <Image src="/report.webp" width={100} height={100} alt="Draggable Files" draggable="false" loading='lazy' className='md:scale-100 scale-50'/>
     </motion.div>
   );
 };

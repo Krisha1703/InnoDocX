@@ -30,7 +30,7 @@ const DotMenu = () => {
         color="inherit"
         onClick={handleClick}
       >
-        <Image src="/dotmenu.png" width={30} height={30} alt="menu" />
+        <Image src="/dotmenu.png" width={30} height={30} alt="menu" loading="lazy" className="w-auto h-auto"/>
       </IconButton>
       
       <Menu

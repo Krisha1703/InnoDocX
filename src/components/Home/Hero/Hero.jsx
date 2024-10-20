@@ -2,11 +2,12 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import useAppState from '../../useAppState';
-import CreateDocument from "./CreateDocument"
-import ListDocuments from "../List Documents/ListDocuments"
-import ScrollTrigger from "./ScrollTrigger"
 import { useContext } from 'react';
 import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
+
+const CreateDocument = dynamic(() => import('./CreateDocument'), { ssr: false });
+const ListDocuments = dynamic(() => import('../List Documents/ListDocuments'), { ssr: false });
+const ScrollTrigger = dynamic(() => import('./ScrollTrigger'), { ssr: false });
 
 //Import draggable components
 const DraggablePencil = dynamic(() => import('./DraggablePencil'), { ssr: false });
@@ -40,6 +41,7 @@ export default function CreateDoc() {
                 width={200}
                 height={200}
                 alt="createdoc"
+                loading='lazy'
                 className='cursor-pointer border-0 hover:border-2 hover:border-blue-500'
                 onClick={() => setShowModal(true)}
               />

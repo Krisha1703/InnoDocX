@@ -1,21 +1,22 @@
-import { useEffect } from 'react';
 import { MenuItem, Button, Menu } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { ArrowDropDown } from '@mui/icons-material';
-import { Folder } from '@mui/icons-material';
-import Image from 'next/image';
-import { db } from '../../firebase';
-import useAppState from '../../useAppState';
-import { onSnapshot } from 'firebase/firestore';
-import Link from 'next/link';
-import EditDocument from "./EditDocument"
-import { ToastContainer, toast } from 'react-toastify';
-import { useState } from 'react';
-import { useContext } from 'react';
-import  ThemeContext  from '../../Developer Mode/ThemeContext'; // Import your ThemeContext
+import { ArrowDropDown, Folder } from '@mui/icons-material';
 
+import Image from 'next/image';
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { ToastContainer, toast } from 'react-toastify';
+import { useState, useContext, useEffect, useCallback } from 'react';
+
+import { db } from '../../firebase';
+import { onSnapshot } from 'firebase/firestore';
 import 'react-toastify/dist/ReactToastify.css'; 
-import { doc, setDoc, collection, getDocs, orderBy, query, serverTimestamp, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc, collection, orderBy, query, serverTimestamp } from 'firebase/firestore';
+
+import useAppState from '../../useAppState';
+import  ThemeContext  from '../../Developer Mode/ThemeContext';
+
+const EditDocument = dynamic(() => import('./EditDocument'), { ssr: false });
 
 const ListDocuments = () => {
     const { isDarkMode } = useContext(ThemeContext); // Access dark mode value
@@ -54,21 +55,21 @@ const ListDocuments = () => {
     const [sortDirection, setSortDirection] = useState('desc'); // Track current sorting order (asc/desc)
   
      // Handle sorting by field (toggle between ascending and descending)
-    const handleSortClick = (field) => {
+    const handleSortClick = useCallback((field) => {
         const newDirection = sortField === field && sortDirection === 'asc' ? 'desc' : 'asc';
         setSortField(field);
         setSortDirection(newDirection);
 
         // Call fetchDocuments with the updated sort field and direction
         fetchDocuments(selectedCategory, field, newDirection);
-    };
+    }, []);
 
 
     // Handle category selection and filter documents
-    const handleCategorySelect = (category) => {
+    const handleCategorySelect = useCallback((category) => {
         setSelectedCategory(category);
         fetchDocuments(category, sortField, sortDirection); // Fetch documents filtered by category and sorted
-    };
+    }, []);
 
     const handleClose = () => {
         setShowModal(false);
@@ -97,9 +98,9 @@ const ListDocuments = () => {
         setHoveredDocPreview('');
       };
 
-      const handleCategoryClick = (event) => {
+      const handleCategoryClick = useCallback((event) => {
         setAnchorEl(event.currentTarget);
-      };
+      }, []);
     
       
 
@@ -231,7 +232,7 @@ const ListDocuments = () => {
             >
               <Link href={`/doc/${doc.id}`} passHref>
                 <div className="flex items-center space-x-4">
-                  <Image src="/docs.png" width={20} height={20} alt="Document Icon" className='scale-75' />
+                  <Image src="/docs.png" width={20} height={20} alt="Document Icon" className='scale-75 w-auto h-auto' />
                   <p className="text-md">{doc.fileName}</p>
                 </div>
               </Link>

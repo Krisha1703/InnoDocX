@@ -1,26 +1,26 @@
 //React Hooks
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useCallback } from 'react';
 import { useSession } from "next-auth/react";
 import { motion } from 'framer-motion';
+import dynamic from "next/dynamic";
 
 //MUI Components
-import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
+import { AppBar, Toolbar, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import MicIcon from '@mui/icons-material/Mic';
 
 //UI Components
-import DotMenu from "./DotMenu";
-import AccountModal from "../../AccountModal";
-import SidebarDrawer from './Drawer';
-import DeveloperModeButton from "../../Developer Mode/DeveloperModeButton"
-import { Search, SearchIconWrapper, StyledInputBase } from './Search';
-import DocumentsList from './DocumentsList'; 
-import ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
+const DotMenu = dynamic(() => import('./DotMenu'), { ssr: false });
+const AccountModal = dynamic(() => import('../../AccountModal'), { ssr: false });
+const SidebarDrawer = dynamic(() => import('./Drawer'), { ssr: false });
+const DeveloperModeButton = dynamic(() => import('../../Developer Mode/DeveloperModeButton'), { ssr: false });
+const DocumentsList = dynamic(() => import('./DocumentsList'), { ssr: false });
 
+import { Search, SearchIconWrapper, StyledInputBase } from './Search'; 
+import ThemeContext from '@/components/Developer Mode/ThemeContext';
 import { ToastContainer, toast } from 'react-toastify';
 import Image from 'next/image';
-
 
 
 // Voice Recognition Setup
@@ -61,10 +61,10 @@ export default function HeaderNavbar() {
     setState((prevState) => ({ ...prevState, searchQuery: transcript }));
   };
 
-  const handleSearchChange = (event) => {
+  const handleSearchChange = useCallback((event) => {
     const value = event.target.value;
     setState((prevState) => ({ ...prevState, searchQuery: value }));
-  };
+  }, []);
 
   return (
     <div>
@@ -78,9 +78,9 @@ export default function HeaderNavbar() {
             </IconButton>
             
             <div className={`flex text-nowrap cursor-pointer items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-700'} `}>
-              <Image src="/docs.png" width={30} height={30} alt="docs" className='md:block hidden'/>
+              <Image src="/docs.png" width={30} height={30} alt="docs" loading='lazy' className='md:block hidden w-auto h-auto'/>
               
-              <motion.h6 whileHover={{scale: 1.05, color: "#2F85F4"}} className='md:block hidden'>InnoDocX</motion.h6>
+              <motion.h1 whileHover={{scale: 1.05, color: "#2F85F4"}} className='md:block hidden lg:text-[1.5rem] text-xl'>InnoDocX</motion.h1>
               
             </div>
           </div>
@@ -118,6 +118,7 @@ export default function HeaderNavbar() {
               alt={session.user.name}
               width={50}
               height={50}
+              loading='lazy'
               className='rounded-full cursor-pointer'
               style={{ transform: 'scale(0.8)' }}
             />

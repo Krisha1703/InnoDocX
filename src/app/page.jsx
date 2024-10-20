@@ -7,14 +7,14 @@ import { db } from '../components/firebase';
 //React Hooks
 import { useEffect } from 'react';
 import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 
 //UI Components
 import { ThemeProvider } from '../components/Developer Mode/ThemeContext';
-import Hero from "../components/Home/Hero/Hero";
-import Login from "../components/Login";
 
-import dynamic from "next/dynamic";
 const Header = dynamic(() => import('../components/Home/Header/Header'), { ssr: false });
+const Hero = dynamic(() => import('../components/Home/Hero/Hero'), { ssr: false });
+const Login = dynamic(() => import('../components/Login'), { ssr: false });
 
 
 export default function Home() {

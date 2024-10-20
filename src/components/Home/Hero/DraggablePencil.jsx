@@ -19,12 +19,8 @@ const DraggablePencil = () => {
   };
 
   useEffect(() => {
-    // Set initial drag constraints based on screen size
     updateDragConstraints();
-
-    // Add event listener to update constraints on window resize
     window.addEventListener('resize', updateDragConstraints);
-
     return () => {
       window.removeEventListener('resize', updateDragConstraints);
     };
@@ -39,7 +35,7 @@ const DraggablePencil = () => {
       whileHover={{ scale: 1.1 }} // Scale up slightly on hover
       whileTap={{ scale: 0.95 }} // Slightly scale down on click/drag
     >
-       <Image src="/pencil.png" width={50} height={50} alt="Draggable Pencil" draggable="false" className='md:scale-100 scale-75'/>
+       <Image src="/pencil.png" width={50} height={50} alt="Draggable Pencil" draggable="false" loading='lazy' className='md:scale-100 scale-75'/>
     </motion.div>
   );
 };

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import ThemeContext from './ThemeContext'; 
 import { CodeRounded } from '@mui/icons-material';
 
-
 const DeveloperModeButton = () => {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const [isDeveloperMode, setDeveloperMode] = useState(false);

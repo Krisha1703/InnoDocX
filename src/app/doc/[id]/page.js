@@ -13,19 +13,21 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 
 //UI Components
-import Login from "@/components/Login";
-import AccountModal from "@/components/AccountModal";
+
 import { ThemeProvider } from "@/components/Developer Mode/ThemeContext";
-import TextEditor from "@/components/Document Editor/Text Editor/TextEditor";
-import ShareDoc from "@/components/Document Editor/Text Editor/ShareDocument";
-import ChartModal from "@/components/Document Editor/Text Editor/ChartModal";
-import DashboardAnalytics from "@/components/Document Editor/Dashboard/DashboardAnalytics";
-import WordCountModal from "@/components/Document Editor/Text Editor/WordCountModal";
-import DeveloperModeButton from "@/components/Developer Mode/DeveloperModeButton";
 import DarkMode from "@/components/Developer Mode/DarkMode"
 
 import dynamic from "next/dynamic";
+
 const ToolBarMenu = dynamic(() => import('@/components/Document Editor/Text Editor/ToolbarMenu'), { ssr: false });
+const AccountModal = dynamic(() => import('@/components/AccountModal'), { ssr: false });
+const Login = dynamic(() => import('@/components/Login'), { ssr: false });
+const TextEditor = dynamic(() => import('@/components/Document Editor/Text Editor/TextEditor'), { ssr: false });
+const ShareDoc = dynamic(() => import('@/components/Document Editor/Text Editor/ShareDocument'), { ssr: false });
+const ChartModal = dynamic(() => import('@/components/Document Editor/Text Editor/ChartModal'), { ssr: false });
+const DashboardAnalytics = dynamic(() => import('@/components/Document Editor/Dashboard/DashboardAnalytics'), { ssr: false });
+const WordCountModal = dynamic(() => import('@/components/Document Editor/Text Editor/WordCountModal'), { ssr: false });
+const DeveloperModeButton = dynamic(() => import('@/components/Developer Mode/DeveloperModeButton'), { ssr: false });
 
 export default function Page({ params }) {
   const { data: session } = useSession();
@@ -184,7 +186,7 @@ export default function Page({ params }) {
       <header className={`flex justify-between items-center p-3 pb-1 `}>
         {/*Google Docs Icon to return to home page again*/}
         <span onClick={() => router.push("/")} className="cursor-pointer">
-          <Image src="/docs.png" width={30} height={30} alt="docs" />
+          <Image src="/docs.png" width={30} height={30} alt="docs" loading="lazy" className="w-auto h-auto"/>
         </span>
 
         <div className="flex-grow px-2">
@@ -236,8 +238,9 @@ export default function Page({ params }) {
           alt={session.user.name}
           width={50}
           height={50}
-          className="rounded-full cursor-pointer"
+          className="rounded-full cursor-pointer w-auto h-auto"
           style={{ transform: "scale(0.8)" }}
+          loading="lazy"
         />
       </header>
 

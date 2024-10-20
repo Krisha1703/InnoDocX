@@ -78,7 +78,7 @@ const DashboardAnalytics = ({ modalOpen, handleModalClose }) => {
 
               {/* Summarized Text */}
               <div className={`card pb-10 p-8 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-                  <Typography sx={{ marginBottom: "2vw" }}>Summarized Text</Typography>
+                  <Typography sx={{ marginBottom: "2vw"}}><b>Summarized Text</b></Typography>
                   <Summarize />
               </div>
       

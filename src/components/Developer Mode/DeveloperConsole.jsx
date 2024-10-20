@@ -122,8 +122,6 @@ const DeveloperConsole = ({ filename, editorState, setEditorState, wordCountStat
     newLines.push("File content deleted.");
   };
 
-
-
   // Handle the "head" command to print the first 10 lines
   const handleHeadCommand = (newLines) => {
     const contentState = editorState.getCurrentContent();

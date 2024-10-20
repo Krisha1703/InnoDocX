@@ -38,7 +38,7 @@ const AccountModal = ({ modalOpen, handleModalClose }) => {
 
         <Box className="mt-2 flex flex-col items-center">
           {session?.user?.image && (
-            <Image src={session.user.image} alt={session.user.name} width={50} height={50} className='rounded-full' />
+            <Image src={session.user.image} alt={session.user.name} width={50} height={50} loading='lazy' className='rounded-full' />
           )}
           <Typography variant="body1" sx={{ mt: 1, color: isDarkMode ? '#ffffff' : '#000000' }}>{session?.user?.name}</Typography>
           <Typography variant="body2" color="textSecondary" sx={{ color: isDarkMode ? '#ffffff' : 'textSecondary' }}>{session?.user?.email}</Typography>

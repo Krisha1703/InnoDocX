@@ -14,9 +14,10 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
 import { useSummary } from 'use-react-summary';
 import { setWordCount, setSentenceCount, setCharacterCount, setUniqueCount, setAverageReadingTime, averageReadingTime } from "../Text Editor/WordCount";
-import DeveloperConsole from "@/components/Developer Mode/DeveloperConsole";
-import FindAndReplaceModal from "./FindAndReplaceModal";
 import ThemeContext from "@/components/Developer Mode/ThemeContext";
+
+const DeveloperConsole = dynamic(() => import('@/components/Developer Mode/DeveloperConsole'), { ssr: false });
+const FindAndReplaceModal = dynamic(() => import('./FindAndReplaceModal'), { ssr: false });
 
 // Dynamic import of the editor component
 const Editor = dynamic(() =>
