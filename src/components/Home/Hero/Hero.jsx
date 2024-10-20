@@ -3,7 +3,7 @@ import Image from 'next/image';
 import useAppState from '../../useAppState';
 import CreateDocument from "./CreateDocument"
 import ListDocuments from "../List Documents/ListDocuments"
-//import ScrollTrigger from "./ScrollTrigger"
+import ScrollTrigger from "./ScrollTrigger"
 import { useContext } from 'react';
 import VoiceAssistant from "./VoiceAssisstant"
 import  ThemeContext  from '@/components/Developer Mode/ThemeContext'; 
@@ -54,9 +54,9 @@ export default function CreateDoc() {
             <DraggableFolder />
             <DraggableReport />
 
-            {/*<div className="flex-grow mx-4"> 
+            <div className="flex-grow mx-4"> 
               <ScrollTrigger />
-            </div>*/}
+            </div>
 
           </div>
         
