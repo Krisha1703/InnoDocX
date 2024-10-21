@@ -12,14 +12,6 @@ const DeveloperModeButton = () => {
   const handleDeveloperModeToggle = () => {
     setDeveloperMode(!isDeveloperMode);
     toggleTheme(); // Optionally toggle theme when switching modes
-    toast.dismiss();
-    if (isDeveloperMode){
-      toast.success("Developer mode turned on!");
-    }
-    else{
-      toast.success("Developer mode turned off!");
-    }
-    
   };
 
   return (
